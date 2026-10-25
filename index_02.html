@@ -883,6 +883,18 @@
       .room > .trail {
         display: none;
       }
+      .image-credit {
+        position: fixed;
+        right: max(12px, env(safe-area-inset-right, 0px));
+        bottom: max(10px, env(safe-area-inset-bottom, 0px));
+        z-index: 10;
+        margin: 0;
+        color: rgba(221, 213, 192, 0.72);
+        font-size: 11px;
+        line-height: 1.4;
+        text-align: right;
+        pointer-events: none;
+      }
 
       @media (max-width: 760px) {
         .slots {
@@ -1479,6 +1491,7 @@
           </div>
         </div>
       </div>
+      <p class="image-credit">*이미지는 AI로 제작되었습니다.</p>
 
       <nav class="controls" aria-label="책장 넘기기">
         <button class="nav-btn" id="prevBtn" type="button" aria-label="앞 장">
