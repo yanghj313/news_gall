@@ -1,0 +1,1923 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #fff;
+        color: #000;
+      }
+      img {
+        max-width: 100%;
+      }
+      [hidden]:not([hidden="until-found" i]) {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <title>bible</title>
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&display=swap"
+    />
+    <style>
+      :root {
+        --wall: #151714;
+        --wall-lit: #2a2922;
+        --paper: #e4d6b5;
+        --ink: #2b231c;
+        --graphite: #4b443e;
+        --red: #8f2b1f;
+        --leather: #3b1e16;
+        --gilt: #c6a159;
+        --mist: #aaa595;
+        --mist-dim: #6f6b60;
+
+        --f-display: "IM Fell English SC", Georgia, "Times New Roman", serif;
+        --f-text: "IM Fell English", Georgia, "Times New Roman", serif;
+        --f-ui: "Gowun Batang", "Nanum Myeongjo", "Apple SD Gothic Neo", serif;
+        --f-hand: "Nanum Pen Script", "Gowun Batang", cursive;
+
+        --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .12 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        --pencil: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C40 4.4 80 7.2 120 5.4 S180 5 199 6.6' fill='none' stroke='%23463f39' stroke-width='1.7' stroke-linecap='round' opacity='.85'/%3E%3Cpath d='M4 7.4 C60 6.2 130 8.2 196 6.9' fill='none' stroke='%23463f39' stroke-width='.8' opacity='.45'/%3E%3C/svg%3E");
+        --pencil-faint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C40 4.6 80 7 120 5.6 S180 5.2 199 6.4' fill='none' stroke='%23463f39' stroke-width='1.6' stroke-linecap='round' opacity='.22' stroke-dasharray='9 5 14 7'/%3E%3C/svg%3E");
+        --redink: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 10' preserveAspectRatio='none'%3E%3Cpath d='M1 6 C40 4.4 80 7.2 120 5.4 S180 5 199 6.6' fill='none' stroke='%238f2b1f' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M3 8 C70 6.6 140 8.6 197 7.4' fill='none' stroke='%238f2b1f' stroke-width='1' opacity='.6'/%3E%3C/svg%3E");
+
+        --dur: 0.9s;
+        color-scheme: dark;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        min-height: 100%;
+      }
+      body {
+        background-color: var(--wall);
+        overflow: hidden;
+        background-image:
+          radial-gradient(
+            ellipse 70% 55% at 50% 38%,
+            var(--wall-lit) 0%,
+            rgba(42, 41, 34, 0) 70%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            rgba(255, 255, 255, 0.012) 0 1px,
+            transparent 1px 64px
+          );
+        color: var(--mist);
+        font-family: var(--f-ui);
+      }
+      button {
+        font: inherit;
+      }
+
+      .room {
+        position: fixed;
+        inset: 0;
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+          env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+      }
+      .intro,
+      .controls,
+      .trail {
+        display: none;
+      }
+
+      /* ---------- intro ---------- */
+      .intro {
+        width: 100%;
+        max-width: 900px;
+        display: grid;
+        gap: 6px;
+      }
+      .eyebrow {
+        margin: 0;
+        font-family: var(--f-display);
+        font-size: 13px;
+        letter-spacing: 0.22em;
+        color: var(--mist-dim);
+      }
+      .intro h1 {
+        margin: 0;
+        font-size: clamp(24px, 4vw, 32px);
+        font-weight: 700;
+        color: #e9e2cf;
+        text-wrap: balance;
+        letter-spacing: -0.01em;
+      }
+      .lede {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        max-width: 60ch;
+      }
+
+      /* ---------- book ---------- */
+      .stage {
+        width: 100%;
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        touch-action: pan-y;
+      }
+      .viewport {
+        position: relative;
+        perspective: 2600px;
+        user-select: none;
+        -webkit-user-select: none;
+        cursor: pointer;
+      }
+      .viewport.single {
+        overflow: hidden;
+      }
+      .book {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: calc(var(--pw) * 2);
+        height: var(--ph);
+        transform-style: preserve-3d;
+        transition: transform var(--dur) cubic-bezier(0.4, 0.1, 0.2, 1);
+      }
+      .book.instant,
+      .book.instant .leaf {
+        transition: none !important;
+      }
+
+      .leaf {
+        position: absolute;
+        top: 0;
+        left: var(--pw);
+        width: var(--pw);
+        height: 100%;
+        transform-origin: left center;
+        transform-style: preserve-3d;
+        transition: transform var(--dur) cubic-bezier(0.45, 0.05, 0.25, 1);
+      }
+      .leaf.flipped {
+        transform: rotateY(-180deg);
+      }
+
+      .face {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        box-shadow: 0 22px 34px -18px rgba(0, 0, 0, 0.75);
+      }
+      .face.back {
+        transform: rotateY(180deg);
+      }
+      .face::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.35),
+          rgba(0, 0, 0, 0) 65%
+        );
+      }
+      .leaf.turning .face::after {
+        animation: shade var(--dur) ease;
+      }
+      @keyframes shade {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* paper */
+      .page {
+        background-color: var(--paper);
+        background-image:
+          var(--noise),
+          radial-gradient(
+            circle at 16% 84%,
+            rgba(140, 98, 48, 0.2) 0 1.4%,
+            rgba(140, 98, 48, 0) 2.6%
+          ),
+          radial-gradient(
+            circle at 78% 12%,
+            rgba(140, 98, 48, 0.14) 0 1%,
+            rgba(140, 98, 48, 0) 2%
+          ),
+          radial-gradient(
+            ellipse at 50% 46%,
+            rgba(0, 0, 0, 0) 52%,
+            rgba(118, 82, 38, 0.32) 100%
+          );
+        color: var(--ink);
+      }
+      .face.front.page::before,
+      .face.back.page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .face.front.page::before {
+        background: linear-gradient(
+          90deg,
+          rgba(40, 25, 10, 0.34),
+          rgba(40, 25, 10, 0.08) 5%,
+          rgba(40, 25, 10, 0) 13%
+        );
+      }
+      .face.back.page::before {
+        background: linear-gradient(
+          270deg,
+          rgba(40, 25, 10, 0.34),
+          rgba(40, 25, 10, 0.08) 5%,
+          rgba(40, 25, 10, 0) 13%
+        );
+      }
+
+      .pg {
+        position: absolute;
+        inset: 0;
+        padding: 7% 8% 6%;
+        display: flex;
+        flex-direction: column;
+        font-family: var(--f-text);
+        font-size: calc(var(--pw) * 0.031);
+        line-height: 1.33;
+      }
+      .rh {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-family: var(--f-display);
+        font-size: 0.86em;
+        letter-spacing: 0.08em;
+        border-bottom: 3px double rgba(43, 35, 28, 0.55);
+        padding-bottom: 0.3em;
+        margin-bottom: 0.6em;
+      }
+      .rh i {
+        font-family: var(--f-text);
+        letter-spacing: 0;
+      }
+      .chap {
+        font-family: var(--f-display);
+        text-align: center;
+        letter-spacing: 0.14em;
+        margin: 0.1em 0 0.5em;
+        font-size: 1.04em;
+      }
+      .heb {
+        text-align: center;
+        font-family: var(--f-display);
+        letter-spacing: 0.12em;
+        margin: 0 0 0.4em;
+      }
+      .cols {
+        flex: 1;
+        min-height: 0;
+        column-count: 2;
+        column-gap: 1.4em;
+        column-rule: 1px solid rgba(43, 35, 28, 0.32);
+        text-align: justify;
+        hyphens: auto;
+        -webkit-hyphens: auto;
+      }
+      .cols p {
+        margin: 0 0 0.32em;
+      }
+      sup.v {
+        font-family: var(--f-display);
+        font-size: 0.62em;
+        line-height: 0;
+        vertical-align: 0.5em;
+        margin-right: 0.16em;
+      }
+      .folio {
+        text-align: center;
+        font-family: var(--f-display);
+        font-size: 0.8em;
+        letter-spacing: 0.12em;
+        margin-top: 0.5em;
+      }
+
+      /* underline */
+      .ul {
+        cursor: pointer;
+        background-image: var(--pencil);
+        background-repeat: no-repeat;
+        background-size: 100% 0.5em;
+        background-position: 0 100%;
+        padding-bottom: 0.1em;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        border-radius: 1px;
+        transition:
+          background-color 0.2s,
+          color 0.3s;
+      }
+      .ul:hover,
+      .ul:focus-visible {
+        background-color: rgba(75, 68, 62, 0.13);
+        outline: none;
+      }
+      .ul:focus-visible {
+        box-shadow: 0 0 0 1px rgba(75, 68, 62, 0.5);
+      }
+      .ul.found {
+        background-image: var(--redink);
+        color: #431711;
+        cursor: default;
+      }
+      .ul.found::after {
+        content: attr(data-roman);
+        font-family: var(--f-hand);
+        color: var(--red);
+        font-size: 1.35em;
+        line-height: 0;
+        margin-left: 0.2em;
+        vertical-align: 0.35em;
+      }
+      .ul.shake {
+        animation: shake 0.42s;
+      }
+      @keyframes shake {
+        20% {
+          transform: translateX(-2px);
+        }
+        40% {
+          transform: translateX(2px);
+        }
+        60% {
+          transform: translateX(-1px);
+        }
+        80% {
+          transform: translateX(1px);
+        }
+      }
+      .ul.shake {
+        display: inline-block;
+      }
+      .erased {
+        background-image: var(--pencil-faint);
+        background-repeat: no-repeat;
+        background-size: 100% 0.5em;
+        background-position: 0 100%;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+      }
+      .hand {
+        font-family: var(--f-hand);
+        color: var(--graphite);
+        font-size: 1.7em;
+        line-height: 1.05;
+        margin: 0;
+      }
+      .note {
+        position: absolute;
+        z-index: 2;
+        transform: rotate(-4deg);
+      }
+
+      /* title page */
+      .title-pg {
+        justify-content: center;
+        text-align: center;
+        gap: 0.9em;
+      }
+      .title-pg .t1 {
+        font-family: var(--f-display);
+        font-size: 1em;
+        letter-spacing: 0.3em;
+        margin: 0;
+      }
+      .title-pg .t2 {
+        font-family: var(--f-display);
+        font-size: 2.3em;
+        letter-spacing: 0.08em;
+        margin: 0;
+        line-height: 1;
+      }
+      .title-pg .t3 {
+        margin: 0;
+        font-style: italic;
+      }
+      .title-pg .t4 {
+        font-family: var(--f-display);
+        letter-spacing: 0.1em;
+        margin: 0;
+        font-size: 1.2em;
+      }
+      .title-pg .rule {
+        width: 40%;
+        margin: 0 auto;
+        border-top: 3px double rgba(43, 35, 28, 0.55);
+      }
+      .title-pg small {
+        font-size: 0.82em;
+      }
+
+      /* covers */
+      .cover {
+        background-color: var(--leather);
+        background-image:
+          var(--noise),
+          radial-gradient(
+            ellipse at 40% 30%,
+            rgba(120, 64, 40, 0.35),
+            rgba(0, 0, 0, 0) 60%
+          ),
+          linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.55) 0 3%,
+            rgba(255, 255, 255, 0.04) 3.5% 4%,
+            rgba(0, 0, 0, 0.3) 4.5% 7%,
+            rgba(0, 0, 0, 0) 9%
+          );
+        color: var(--gilt);
+        border-radius: 3px 9px 9px 3px;
+      }
+      .cover.back-cover {
+        border-radius: 9px 3px 3px 9px;
+        background-image:
+          var(--noise),
+          radial-gradient(
+            ellipse at 60% 70%,
+            rgba(120, 64, 40, 0.3),
+            rgba(0, 0, 0, 0) 60%
+          ),
+          linear-gradient(
+            270deg,
+            rgba(0, 0, 0, 0.55) 0 3%,
+            rgba(255, 255, 255, 0.04) 3.5% 4%,
+            rgba(0, 0, 0, 0.3) 4.5% 7%,
+            rgba(0, 0, 0, 0) 9%
+          );
+      }
+      .cover-frame {
+        position: absolute;
+        inset: 7% 8% 7% 12%;
+        border: 2px solid rgba(198, 161, 89, 0.7);
+        outline: 1px solid rgba(198, 161, 89, 0.45);
+        outline-offset: -7px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: calc(var(--pw) * 0.05);
+        font-family: var(--f-display);
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+      }
+      .back-cover .cover-frame {
+        inset: 7% 12% 7% 8%;
+      }
+      .cross {
+        position: relative;
+        width: calc(var(--pw) * 0.07);
+        height: calc(var(--pw) * 0.11);
+      }
+      .cross::before,
+      .cross::after {
+        content: "";
+        position: absolute;
+        background: var(--gilt);
+      }
+      .cross::before {
+        left: 42%;
+        width: 16%;
+        height: 100%;
+      }
+      .cross::after {
+        top: 26%;
+        width: 100%;
+        height: 11%;
+      }
+      .cover-title {
+        margin: 0;
+        text-align: center;
+        font-size: calc(var(--pw) * 0.1);
+        line-height: 1.05;
+        letter-spacing: 0.14em;
+      }
+      .cover-sub {
+        margin: 0;
+        font-size: calc(var(--pw) * 0.026);
+        letter-spacing: 0.26em;
+        opacity: 0.8;
+        text-align: center;
+      }
+
+      /* endpapers */
+      .endpaper {
+        background-color: #4a3a2c;
+        background-image:
+          var(--noise),
+          radial-gradient(
+            circle at 20% 30%,
+            rgba(120, 90, 60, 0.4),
+            rgba(0, 0, 0, 0) 30%
+          ),
+          radial-gradient(
+            circle at 75% 65%,
+            rgba(30, 20, 12, 0.5),
+            rgba(0, 0, 0, 0) 35%
+          ),
+          radial-gradient(
+            circle at 60% 20%,
+            rgba(150, 110, 70, 0.25),
+            rgba(0, 0, 0, 0) 25%
+          );
+      }
+      .bookplate {
+        position: absolute;
+        left: 14%;
+        right: 12%;
+        top: 12%;
+        background: var(--paper);
+        background-image: var(--noise);
+        color: var(--ink);
+        padding: 6% 7%;
+        font-family: var(--f-text);
+        font-size: calc(var(--pw) * 0.03);
+        text-align: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        display: grid;
+        gap: 0.5em;
+      }
+      .bookplate .bp1 {
+        font-family: var(--f-display);
+        letter-spacing: 0.16em;
+        font-size: 0.82em;
+        margin: 0;
+      }
+      .bookplate .bp2 {
+        font-family: var(--f-display);
+        font-size: 1.5em;
+        letter-spacing: 0.08em;
+        margin: 0;
+      }
+      .bookplate .bp3 {
+        margin: 0;
+        font-style: italic;
+      }
+      .bp-lines {
+        display: grid;
+        gap: 0.3em;
+        text-align: left;
+        margin-top: 0.4em;
+      }
+      .bp-lines div {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5em;
+        border-bottom: 1px solid rgba(43, 35, 28, 0.45);
+      }
+      .bp-lines span {
+        font-family: var(--f-display);
+        font-size: 0.8em;
+        letter-spacing: 0.1em;
+      }
+      .bp-lines .hand {
+        font-size: 1.6em;
+      }
+      .stamp {
+        position: absolute;
+        right: 9%;
+        bottom: 30%;
+        width: calc(var(--pw) * 0.32);
+        aspect-ratio: 1;
+        max-width: 100%;
+        border: 3px solid rgba(143, 43, 31, 0.75);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: rgba(143, 43, 31, 0.85);
+        font-family: var(--f-display);
+        font-size: calc(var(--pw) * 0.024);
+        letter-spacing: 0.1em;
+        line-height: 1.3;
+        transform: rotate(-14deg);
+        mix-blend-mode: multiply;
+      }
+      .stamp::before {
+        content: "";
+        position: absolute;
+        inset: 6%;
+        border: 1px solid rgba(143, 43, 31, 0.6);
+        border-radius: 50%;
+      }
+      .inside-note {
+        left: 16%;
+        bottom: 9%;
+        font-size: calc(var(--pw) * 0.055);
+        color: #d9c9a6;
+      }
+
+      .record {
+        display: grid;
+        gap: 0.55em;
+      }
+      .record h3 {
+        margin: 0;
+        font-family: var(--f-display);
+        font-weight: 400;
+        letter-spacing: 0.2em;
+        text-align: center;
+        font-size: 1.15em;
+      }
+      .record .lab {
+        font-family: var(--f-display);
+        letter-spacing: 0.14em;
+        font-size: 0.78em;
+        margin-top: 0.6em;
+      }
+      .record .line {
+        border-bottom: 1px solid rgba(43, 35, 28, 0.4);
+        height: 1.35em;
+      }
+
+      /* ---------- controls ---------- */
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .nav-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(170, 165, 149, 0.35);
+        background: rgba(255, 255, 255, 0.03);
+        color: var(--mist);
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      .nav-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(170, 165, 149, 0.6);
+      }
+      .nav-btn:focus-visible {
+        outline: 2px solid var(--gilt);
+        outline-offset: 2px;
+      }
+      .nav-btn:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .where {
+        font-family: var(--f-display);
+        letter-spacing: 0.14em;
+        font-size: 14px;
+        min-width: 9ch;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* ---------- trail ---------- */
+      .trail {
+        width: 100%;
+        max-width: 900px;
+        display: grid;
+        gap: 12px;
+      }
+      .trail-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+        border-bottom: 1px solid rgba(170, 165, 149, 0.18);
+        padding-bottom: 8px;
+      }
+      .trail-head h2 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: #ddd5c0;
+      }
+      .count {
+        font-family: var(--f-display);
+        letter-spacing: 0.1em;
+        font-variant-numeric: tabular-nums;
+      }
+      .slots {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .slot {
+        position: relative;
+        min-height: 86px;
+        padding: 10px 8px;
+        border: 1px dashed rgba(170, 165, 149, 0.28);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+        font-size: 12px;
+        line-height: 1.35;
+        transition:
+          transform 0.4s,
+          background-color 0.4s;
+      }
+      .slot .n {
+        font-family: var(--f-display);
+        font-size: 15px;
+        letter-spacing: 0.06em;
+        color: var(--mist-dim);
+      }
+      .slot .room {
+        font-family: var(--f-display);
+        letter-spacing: 0.08em;
+        font-size: 12px;
+      }
+      .slot .ref {
+        font-family: var(--f-text);
+        font-style: italic;
+        font-size: 13px;
+      }
+      .slot.filled {
+        border-color: transparent;
+        background-color: var(--paper);
+        background-image: var(--noise);
+        color: var(--ink);
+        transform: rotate(var(--tilt, 0deg));
+        clip-path: polygon(
+          0 3%,
+          14% 0,
+          33% 4%,
+          52% 1%,
+          71% 4%,
+          88% 0,
+          100% 3%,
+          98% 30%,
+          100% 62%,
+          97% 100%,
+          76% 97%,
+          55% 100%,
+          34% 96%,
+          15% 100%,
+          0 97%,
+          2% 64%,
+          0 33%
+        );
+        animation: land 0.45s ease-out;
+      }
+      .slot.filled .n {
+        color: var(--red);
+      }
+      .slot.pulse {
+        animation: pulse 0.7s ease;
+      }
+      @keyframes land {
+        from {
+          transform: translateY(-8px) rotate(0deg);
+          opacity: 0;
+        }
+        to {
+          transform: rotate(var(--tilt, 0deg));
+          opacity: 1;
+        }
+      }
+      @keyframes pulse {
+        40% {
+          transform: translateY(-5px) rotate(0deg);
+          filter: brightness(1.12);
+        }
+      }
+      .whisper {
+        margin: 0;
+        min-height: 1.6em;
+        font-family: var(--f-text);
+        font-style: italic;
+        font-size: 16px;
+        color: #cdbf9e;
+      }
+      .whisper.ko {
+        font-family: var(--f-hand);
+        font-style: normal;
+        font-size: 22px;
+      }
+      .trail-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .btn {
+        padding: 9px 16px;
+        border-radius: 2px;
+        cursor: pointer;
+        border: 1px solid rgba(170, 165, 149, 0.35);
+        background: transparent;
+        color: var(--mist);
+        font-size: 14px;
+      }
+      .btn:hover {
+        border-color: rgba(170, 165, 149, 0.7);
+      }
+      .btn:focus-visible {
+        outline: 2px solid var(--gilt);
+        outline-offset: 2px;
+      }
+      .btn.primary {
+        background: var(--red);
+        border-color: var(--red);
+        color: #f3e8d6;
+      }
+
+      .room > .intro,
+      .room > .controls,
+      .room > .trail {
+        display: none;
+      }
+
+      @media (max-width: 760px) {
+        .slots {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      /* ---------- map ---------- */
+      .map-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(8, 8, 7, 0.9);
+        display: grid;
+        place-items: center;
+        align-content: center;
+        gap: 14px;
+        padding-top: max(20px, env(safe-area-inset-top, 0px));
+        padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+      }
+      .map-sheet {
+        width: min(92vw, 78vh, 760px);
+        max-width: 100%;
+        aspect-ratio: 1;
+        perspective: 1400px;
+      }
+      .map-sheet img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.7));
+        transform-origin: 50% 100%;
+      }
+      .map-sheet img.unfold {
+        animation: unfold 1.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      @keyframes unfold {
+        0% {
+          transform: rotateX(80deg) scale(0.4) translateY(25%);
+          opacity: 0;
+        }
+        45% {
+          opacity: 1;
+        }
+        80% {
+          transform: rotateX(-4deg) scale(1.01);
+        }
+        100% {
+          transform: none;
+          opacity: 1;
+        }
+      }
+      .map-caption {
+        margin: 0;
+        font-family: var(--f-hand);
+        font-size: 24px;
+        color: #d9c9a6;
+        text-align: center;
+      }
+      .close-map {
+        position: absolute;
+        top: calc(14px + env(safe-area-inset-top, 0px));
+        right: calc(14px + env(safe-area-inset-right, 0px));
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        :root {
+          --dur: 0.01s;
+        }
+        .map-sheet img.unfold,
+        .slot.filled,
+        .slot.pulse,
+        .ul.shake {
+          animation: none;
+        }
+      }
+    </style>
+
+    <main class="room">
+      <header class="intro"></header>
+
+      <div class="stage" id="stage">
+        <div
+          class="viewport"
+          id="viewport"
+          aria-label="성경. 왼쪽을 누르면 앞 장, 오른쪽을 누르면 다음 장"
+        >
+          <div class="book" id="book">
+            <!-- 0. 앞표지 | 앞 면지 -->
+            <div class="leaf">
+              <div class="face front cover">
+                <div class="cover-frame">
+                  <span class="cross" aria-hidden="true"></span>
+                  <p class="cover-title">HOLY<br />BIBLE</p>
+                  <p class="cover-sub">AUTHORIZED KING JAMES VERSION</p>
+                </div>
+              </div>
+              <div class="face back endpaper">
+                <div class="bookplate">
+                  <p class="bp1">THIS BOOK IS THE PROPERTY OF THE</p>
+                  <p class="bp2">Chapel Library</p>
+                  <p class="bp3">State Penitentiary</p>
+                  <div class="bp-lines">
+                    <div>
+                      <span>ISSUED TO</span><span class="hand">No. 4471</span>
+                    </div>
+                    <div><span>CELL</span><span class="hand">C – 12</span></div>
+                  </div>
+                </div>
+                <div class="stamp">
+                  <span>DO NOT<br />REMOVE<br />FROM<br />CHAPEL</span>
+                </div>
+                <p class="hand note inside-note">
+                  줄 그은 데만 읽어.<br />
+                  순서대로 퍼즐처럼 맞춰야 돼.
+                </p>
+              </div>
+            </div>
+
+            <!-- 1. 속표지 | 창세기 39 -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg title-pg">
+                  <p class="t1">THE</p>
+                  <p class="t2">HOLY BIBLE,</p>
+                  <p class="t3">Containing the</p>
+                  <p class="t4">OLD AND NEW<br />TESTAMENTS:</p>
+                  <div class="rule"></div>
+                  <p class="t3">
+                    <small
+                      >Translated out of the Original Tongues: and with the
+                      former Translations diligently compared and
+                      revised.</small
+                    >
+                  </p>
+                  <p class="t3">
+                    <small>Appointed to be read in Churches.</small>
+                  </p>
+                  <div class="rule"></div>
+                  <p class="t1"><small>CUM PRIVILEGIO</small></p>
+                </div>
+              </div>
+              <div class="face back page">
+                <div class="pg">
+                  <div class="rh">
+                    <span>GENESIS.</span><i>Joseph in prison.</i>
+                  </div>
+                  <p class="chap">CHAP. XXXIX.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">20</sup>And Joseph's master took him, and
+                      put him into the prison, a place where the king's
+                      prisoners were bound: and he was there in the prison.
+                    </p>
+                    <p>
+                      <sup class="v">21</sup>But the LORD was with Joseph, and
+                      shewed him mercy, and gave him favour in the sight of the
+                      keeper of the prison.
+                    </p>
+                    <p>
+                      <sup class="v">22</sup>And the keeper of the prison
+                      committed to Joseph's hand all the prisoners that were in
+                      the prison; and whatsoever they did there, he was the doer
+                      of it.
+                    </p>
+                    <p>
+                      <sup class="v">23</sup>The keeper of the prison looked not
+                      to any thing that was under his hand; because the LORD was
+                      with him, and that which he did, the LORD made it to
+                      prosper.
+                    </p>
+                  </div>
+                  <div class="folio">38</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. 시편 18 | 시편 119 -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg">
+                  <div class="rh">
+                    <i>David's thanksgiving.</i><span>PSALMS.</span>
+                  </div>
+                  <p class="chap">PSALM XVIII.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">16</sup>He sent from above, he took me, he
+                      drew me out of many waters.
+                    </p>
+                    <p>
+                      <sup class="v">17</sup>He delivered me from my strong
+                      enemy, and from them which hated me: for they were too
+                      strong for me.
+                    </p>
+                    <p>
+                      <sup class="v">18</sup>They prevented me in the day of my
+                      calamity: but the LORD was my stay.
+                    </p>
+                    <p>
+                      <sup class="v">19</sup
+                      ><span
+                        class="ul"
+                        data-step="5"
+                        data-room="YARD"
+                        data-ref="Ps. 18:19"
+                        >He brought me forth also into a large place</span
+                      >; he delivered me, because he delighted in me.
+                    </p>
+                    <p>
+                      <sup class="v">20</sup>The LORD rewarded me according to
+                      my righteousness; according to the cleanness of my hands
+                      hath he recompensed me.
+                    </p>
+                    <p>
+                      <sup class="v">28</sup>For thou wilt light my candle: the
+                      LORD my God will enlighten my darkness.
+                    </p>
+                    <p>
+                      <sup class="v">29</sup>For by thee I have run through a
+                      troop; and by my God have I leaped over a wall.
+                    </p>
+                  </div>
+                  <div class="folio">612</div>
+                </div>
+              </div>
+              <div class="face back page">
+                <div class="pg">
+                  <div class="rh">
+                    <span>PSALMS.</span><i>The excellency of God's word.</i>
+                  </div>
+                  <p class="chap">PSALM CXIX.</p>
+                  <p class="heb">נ NUN.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">105</sup
+                      ><span
+                        class="ul"
+                        data-step="9"
+                        data-room="EXIT"
+                        data-ref="Ps. 119:105"
+                        >Thy word is a lamp unto my feet, and a light unto my
+                        path.</span
+                      >
+                    </p>
+                    <p>
+                      <sup class="v">106</sup>I have sworn, and I will perform
+                      it, that I will keep thy righteous judgments.
+                    </p>
+                    <p>
+                      <sup class="v">107</sup>I am afflicted very much: quicken
+                      me, O LORD, according unto thy word.
+                    </p>
+                    <p>
+                      <sup class="v">108</sup>Accept, I beseech thee, the
+                      freewill offerings of my mouth, O LORD, and teach me thy
+                      judgments.
+                    </p>
+                    <p>
+                      <sup class="v">109</sup>My soul is continually in my hand:
+                      yet do I not forget thy law.
+                    </p>
+                    <p>
+                      <sup class="v">110</sup>The wicked have laid a snare for
+                      me: yet I erred not from thy precepts.
+                    </p>
+                  </div>
+                  <div class="folio">640</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. 시편 146–147 | 이사야 43 -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg">
+                  <div class="rh">
+                    <i>The LORD looseth the prisoners.</i><span>PSALMS.</span>
+                  </div>
+                  <p class="chap">PSALM CXLVI. CXLVII.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">7</sup>Which executeth judgment for the
+                      oppressed: which giveth food to the hungry. The LORD
+                      looseth the prisoners:
+                    </p>
+                    <p>
+                      <sup class="v">8</sup>The LORD openeth the eyes of the
+                      blind: the LORD raiseth them that are bowed down: the LORD
+                      loveth the righteous:
+                    </p>
+                    <p>
+                      <sup class="v">1</sup>Praise ye the LORD: for it is good
+                      to sing praises unto our God; for it is pleasant; and
+                      praise is comely.
+                    </p>
+                    <p>
+                      <sup class="v">2</sup>The LORD doth build up Jerusalem: he
+                      gathereth together the outcasts of Israel.
+                    </p>
+                    <p>
+                      <sup class="v">3</sup
+                      ><span
+                        class="ul"
+                        data-step="3"
+                        data-room="MEDICAL"
+                        data-ref="Ps. 147:3"
+                        >He healeth the broken in heart, and bindeth up their
+                        wounds.</span
+                      >
+                    </p>
+                  </div>
+                  <div class="folio">655</div>
+                </div>
+              </div>
+              <div class="face back page">
+                <div class="pg">
+                  <div class="rh"><span>ISAIAH.</span><i>A new thing.</i></div>
+                  <p class="chap">CHAP. XLIII.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">2</sup>When thou passest through the
+                      waters, I will be with thee; and through the rivers, they
+                      shall not overflow thee: when thou walkest through the
+                      fire, thou shalt not be burned; neither shall the flame
+                      kindle upon thee.
+                    </p>
+                    <p>
+                      <sup class="v">18</sup>Remember ye not the former things,
+                      neither consider the things of old.
+                    </p>
+                    <p>
+                      <sup class="v">19</sup>Behold, I will do a new thing; now
+                      it shall spring forth; shall ye not know it?
+                      <span
+                        class="ul"
+                        data-step="4"
+                        data-room="LAUNDRY"
+                        data-ref="Isa. 43:19"
+                        >I will even make a way in the wilderness</span
+                      >, and rivers in the desert.
+                    </p>
+                    <p>
+                      <sup class="v">20</sup>The beast of the field shall honour
+                      me, the dragons and the owls: because I give waters in the
+                      wilderness, and rivers in the desert, to give drink to my
+                      people, my chosen.
+                    </p>
+                  </div>
+                  <div class="folio">702</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. 이사야 45 | 이사야 61 (지워진 밑줄) -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg">
+                  <div class="rh">
+                    <i>Treasures of darkness.</i><span>ISAIAH.</span>
+                  </div>
+                  <p class="chap">CHAP. XLV.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">2</sup>I will go before thee, and make the
+                      crooked places straight: I will break in pieces the gates
+                      of brass, and cut in sunder the bars of iron:
+                    </p>
+                    <p>
+                      <sup class="v">3</sup>And I will give thee the treasures
+                      of darkness, and
+                      <span
+                        class="ul"
+                        data-step="7"
+                        data-room="STORAGE"
+                        data-ref="Isa. 45:3"
+                        >hidden riches of secret places</span
+                      >, that thou mayest know that I, the LORD, which call thee
+                      by thy name, am the God of Israel.
+                    </p>
+                    <p>
+                      <sup class="v">7</sup>I form the light, and create
+                      darkness: I make peace, and create evil: I the LORD do all
+                      these things.
+                    </p>
+                  </div>
+                  <div class="folio">705</div>
+                </div>
+              </div>
+              <div class="face back page">
+                <div class="pg">
+                  <div class="rh">
+                    <span>ISAIAH.</span><i>Liberty to the captives.</i>
+                  </div>
+                  <p class="chap">CHAP. LXI.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">1</sup>The Spirit of the Lord GOD is upon
+                      me; because the LORD hath anointed me to preach good
+                      tidings unto the meek; he hath sent me to bind up the
+                      brokenhearted, to proclaim liberty to the captives, and
+                      <span class="erased"
+                        >the opening of the prison to them that are bound</span
+                      >;
+                    </p>
+                    <p>
+                      <sup class="v">2</sup>To proclaim the acceptable year of
+                      the LORD, and the day of vengeance of our God; to comfort
+                      all that mourn;
+                    </p>
+                    <p>
+                      <sup class="v">3</sup>To appoint unto them that mourn in
+                      Zion, to give unto them beauty for ashes, the oil of joy
+                      for mourning, the garment of praise for the spirit of
+                      heaviness; that they might be called trees of
+                      righteousness, the planting of the LORD, that he might be
+                      glorified.
+                    </p>
+                  </div>
+                  <div class="folio">718</div>
+                </div>
+                <p class="hand note" style="left: 12%; bottom: 13%">
+                  이건 아니야.
+                </p>
+              </div>
+            </div>
+
+            <!-- 5. 요한복음 1 | 사도행전 16 -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg">
+                  <div class="rh">
+                    <i>The Word made flesh.</i><span>S. JOHN.</span>
+                  </div>
+                  <p class="chap">CHAP. I.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">1</sup>In the beginning was the Word, and
+                      the Word was with God, and the Word was God.
+                    </p>
+                    <p>
+                      <sup class="v">2</sup>The same was in the beginning with
+                      God.
+                    </p>
+                    <p>
+                      <sup class="v">3</sup>All things were made by him; and
+                      without him was not any thing made that was made.
+                    </p>
+                    <p>
+                      <sup class="v">4</sup>In him was life; and the life was
+                      the light of men.
+                    </p>
+                    <p>
+                      <sup class="v">5</sup>And
+                      <span
+                        class="ul"
+                        data-step="2"
+                        data-room="CELL BLOCK A"
+                        data-ref="John 1:5"
+                        >the light shineth in darkness</span
+                      >; and the darkness comprehended it not.
+                    </p>
+                  </div>
+                  <div class="folio">1003</div>
+                </div>
+              </div>
+              <div class="face back page">
+                <div class="pg">
+                  <div class="rh">
+                    <span>THE ACTS.</span><i>The prison doors opened.</i>
+                  </div>
+                  <p class="chap">CHAP. XVI.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">24</sup>Who, having received such a charge,
+                      thrust them into the inner prison, and made their feet
+                      fast in the stocks.
+                    </p>
+                    <p>
+                      <sup class="v">25</sup>And at midnight Paul and Silas
+                      prayed, and sang praises unto God: and the prisoners heard
+                      them.
+                    </p>
+                    <p>
+                      <sup class="v">26</sup>And suddenly there was a great
+                      earthquake, so that the foundations of the prison were
+                      shaken: and
+                      <span
+                        class="ul"
+                        data-step="1"
+                        data-room="WEST DOOR"
+                        data-ref="Acts 16:26"
+                        >immediately all the doors were opened</span
+                      >, and every one's bands were loosed.
+                    </p>
+                  </div>
+                  <div class="folio">1046</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. 베드로전서 5 | 요한계시록 3 -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg">
+                  <div class="rh">
+                    <i>Be sober, be vigilant.</i><span>I. PETER.</span>
+                  </div>
+                  <p class="chap">CHAP. V.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">8</sup
+                      ><span
+                        class="ul"
+                        data-step="6"
+                        data-room="GUARD STATION"
+                        data-ref="1 Pet. 5:8"
+                        >Be sober, be vigilant</span
+                      >; because your adversary the devil, as a roaring lion,
+                      walketh about, seeking whom he may devour:
+                    </p>
+                    <p>
+                      <sup class="v">9</sup>Whom resist stedfast in the faith,
+                      knowing that the same afflictions are accomplished in your
+                      brethren that are in the world.
+                    </p>
+                    <p>
+                      <sup class="v">10</sup>But the God of all grace, who hath
+                      called us unto his eternal glory by Christ Jesus, after
+                      that ye have suffered a while, make you perfect, stablish,
+                      strengthen, settle you.
+                    </p>
+                  </div>
+                  <div class="folio">1170</div>
+                </div>
+              </div>
+              <div class="face back page">
+                <div class="pg">
+                  <div class="rh">
+                    <span>REVELATION.</span><i>An open door.</i>
+                  </div>
+                  <p class="chap">CHAP. III.</p>
+                  <div class="cols">
+                    <p>
+                      <sup class="v">7</sup>And to the angel of the church in
+                      Philadelphia write; These things saith he that is holy, he
+                      that is true, he that hath the key of David, he that
+                      openeth, and no man shutteth; and shutteth, and no man
+                      openeth;
+                    </p>
+                    <p>
+                      <sup class="v">8</sup>I know thy works: behold,
+                      <span
+                        class="ul"
+                        data-step="8"
+                        data-room="CELL BLOCK D"
+                        data-ref="Rev. 3:8"
+                        >I have set before thee an open door, and no man can
+                        shut it</span
+                      >: for thou hast a little strength, and hast kept my word,
+                      and hast not denied my name.
+                    </p>
+                  </div>
+                  <div class="folio">1196</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. 가족 기록 | 뒤표지 -->
+            <div class="leaf">
+              <div class="face front page">
+                <div class="pg record">
+                  <h3>FAMILY RECORD</h3>
+                  <div class="lab">BIRTHS</div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="lab">MARRIAGES</div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="lab">DEATHS</div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                  <div class="line"></div>
+                </div>
+              </div>
+              <div class="face back cover back-cover">
+                <div class="cover-frame"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="controls" aria-label="책장 넘기기">
+        <button class="nav-btn" id="prevBtn" type="button" aria-label="앞 장">
+          ‹
+        </button>
+        <span class="where" id="where" aria-live="polite">COVER</span>
+        <button class="nav-btn" id="nextBtn" type="button" aria-label="다음 장">
+          ›
+        </button>
+      </nav>
+
+      <section class="trail" aria-labelledby="trailTitle">
+        <div class="trail-head">
+          <h2 id="trailTitle">이어진 밑줄</h2>
+          <span class="count" id="count">0 / 9</span>
+        </div>
+        <ol class="slots" id="slots"></ol>
+        <p class="whisper" id="whisper" aria-live="polite"></p>
+        <div class="trail-actions">
+          <button class="btn primary" id="openMap" type="button" hidden>
+            지도 펼치기
+          </button>
+          <button class="btn" id="resetBtn" type="button">처음부터</button>
+        </div>
+      </section>
+    </main>
+
+    <div
+      class="map-overlay"
+      id="mapOverlay"
+      role="dialog"
+      aria-modal="true"
+      aria-label="탈출 지도"
+      hidden
+    >
+      <button class="btn close-map" id="closeMap" type="button">닫기</button>
+      <div class="map-sheet">
+        <img
+          id="mapImg"
+          alt="교도소 평면도. 감방 A–D, 의무실, 세탁실, 운동장, 경비실, 주방, 창고를 지나 출구로 이어지는 점선 경로가 성경 구절과 함께 그려져 있다."
+        />
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ===== 설정 =====
+        const STRICT_ORDER = false; // true: 탈출 경로 순서(I→IX)대로 눌러야만 인정
+        const MAP_SRC = "map.webp"; // 지도 이미지 경로
+        const RATIO = 1.42; // 페이지 세로/가로 비율
+        const ROMAN = [
+          "I",
+          "II",
+          "III",
+          "IV",
+          "V",
+          "VI",
+          "VII",
+          "VIII",
+          "IX",
+          "X",
+          "XI",
+          "XII",
+        ];
+
+        const $ = (s) => document.querySelector(s);
+        const stage = $("#stage");
+        const viewport = $("#viewport");
+        const book = $("#book");
+        const leaves = Array.from(book.querySelectorAll(".leaf"));
+        const N = leaves.length;
+        const uls = Array.from(book.querySelectorAll(".ul"));
+        const TOTAL = uls.length;
+        const slotsEl = $("#slots");
+        const whisperEl = $("#whisper");
+        const countEl = $("#count");
+        const openMapBtn = $("#openMap");
+        const overlay = $("#mapOverlay");
+        const mapImg = $("#mapImg");
+        const prevBtn = $("#prevBtn");
+        const nextBtn = $("#nextBtn");
+        const whereEl = $("#where");
+
+        const durMs =
+          parseFloat(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--dur",
+            ),
+          ) * 1000 || 900;
+
+        let cur = 0; // 넘어간 장(leaf) 수
+        let side = "R"; // 한 쪽 보기일 때 보이는 면
+        let single = false;
+        let pw = 0;
+        let busy = false;
+        const found = new Set();
+
+        // ===== 레이아웃 =====
+        function layout() {
+          const W = stage.clientWidth;
+          single = false;
+          const maxH = stage.clientHeight;
+          const margin = Math.min(24, W * 0.04, maxH * 0.04);
+          let p = Math.min((W - margin * 2) / 2, (maxH - margin * 2) / RATIO);
+          let h = p * RATIO;
+          pw = p;
+
+          stage.style.setProperty("--pw", pw + "px");
+          stage.style.setProperty("--ph", h + "px");
+          viewport.style.width = (single ? pw : pw * 2) + "px";
+          viewport.style.height = h + "px";
+          viewport.classList.toggle("single", single);
+
+          if (cur === 0) side = "R";
+          else if (cur === N) side = "L";
+
+          book.classList.add("instant");
+          position();
+          void book.offsetWidth;
+          book.classList.remove("instant");
+        }
+
+        function zFix() {
+          leaves.forEach((leaf, i) => {
+            if (leaf.classList.contains("turning")) return;
+            leaf.style.zIndex = leaf.classList.contains("flipped")
+              ? i + 1
+              : N - i;
+          });
+        }
+
+        function position() {
+          let x;
+          if (single) x = side === "L" ? 0 : -pw;
+          else x = cur === 0 ? -pw / 2 : cur === N ? pw / 2 : 0;
+          book.style.transform = "translateX(" + x + "px)";
+          updateUI();
+        }
+
+        function visibleFaces() {
+          const left =
+            cur > 0 ? leaves[cur - 1].querySelector(".face.back") : null;
+          const right =
+            cur < N ? leaves[cur].querySelector(".face.front") : null;
+          if (!single) return [left, right];
+          return [side === "L" ? left : right];
+        }
+
+        function updateUI() {
+          const vis = visibleFaces();
+          book.querySelectorAll(".face").forEach((f) => {
+            f.inert = !vis.includes(f);
+          });
+
+          const atStart = cur === 0;
+          const atEnd = cur === N;
+          prevBtn.disabled = atStart;
+          nextBtn.disabled = atEnd && (!single || side === "L");
+
+          if (atStart) whereEl.textContent = "COVER";
+          else if (atEnd) whereEl.textContent = "END";
+          else whereEl.textContent = cur + " / " + (N - 1);
+        }
+
+        // ===== 넘기기 =====
+        function flip(i, forward) {
+          const leaf = leaves[i];
+          leaf.classList.add("turning");
+          leaf.style.zIndex = N + 5;
+          leaf.classList.toggle("flipped", forward);
+          setTimeout(() => {
+            leaf.classList.remove("turning");
+            zFix();
+            if (forward && cur === N) openMap();
+          }, durMs);
+        }
+
+        function lock() {
+          busy = true;
+          setTimeout(
+            () => {
+              busy = false;
+            },
+            Math.min(400, durMs),
+          );
+        }
+
+        function next() {
+          if (busy) return;
+          if (single) {
+            if (side === "L" && cur < N) {
+              side = "R";
+              position();
+              return;
+            }
+            if (side === "R" && cur < N) {
+              flip(cur, true);
+              cur++;
+              side = "L";
+              lock();
+              position();
+            }
+          } else if (cur < N) {
+            flip(cur, true);
+            cur++;
+            lock();
+            position();
+          }
+        }
+
+        function prev() {
+          if (busy) return;
+          if (single) {
+            if (side === "R" && cur > 0) {
+              side = "L";
+              position();
+              return;
+            }
+            if (side === "L" && cur > 0) {
+              cur--;
+              flip(cur, false);
+              side = "R";
+              lock();
+              position();
+            }
+          } else if (cur > 0) {
+            cur--;
+            flip(cur, false);
+            lock();
+            position();
+          }
+        }
+
+        // ===== 밑줄 =====
+        function buildSlots() {
+          slotsEl.innerHTML = "";
+          const steps = uls.map((u) => +u.dataset.step).sort((a, b) => a - b);
+          steps.forEach((step) => {
+            const li = document.createElement("li");
+            li.className = "slot";
+            li.dataset.step = step;
+            li.style.setProperty(
+              "--tilt",
+              (((step * 37) % 7) - 3) * 0.6 + "deg",
+            );
+            li.innerHTML =
+              '<span class="n">' +
+              ROMAN[step - 1] +
+              '</span><span class="room">· · ·</span>';
+            slotsEl.appendChild(li);
+          });
+        }
+
+        function whisper(text, ko) {
+          whisperEl.textContent = text;
+          whisperEl.classList.toggle("ko", !!ko);
+        }
+
+        function nextExpected() {
+          for (let s = 1; s <= TOTAL; s++) if (!found.has(s)) return s;
+          return null;
+        }
+
+        function collect(ul) {
+          if (ul.classList.contains("found")) return;
+          const step = +ul.dataset.step;
+
+          if (STRICT_ORDER && step !== nextExpected()) {
+            ul.classList.remove("shake");
+            void ul.offsetWidth;
+            ul.classList.add("shake");
+            setTimeout(() => ul.classList.remove("shake"), 450);
+            whisper("아직 이 줄이 아니다.", true);
+            return;
+          }
+
+          found.add(step);
+          ul.classList.add("found");
+          ul.dataset.roman = ROMAN[step - 1];
+          ul.setAttribute("aria-pressed", "true");
+
+          const slot = slotsEl.querySelector('[data-step="' + step + '"]');
+          if (slot) {
+            slot.classList.add("filled");
+            slot.title = ul.textContent.trim();
+            slot.innerHTML =
+              '<span class="n">' +
+              ROMAN[step - 1] +
+              "</span>" +
+              '<span class="room">' +
+              ul.dataset.room +
+              "</span>" +
+              '<span class="ref">' +
+              ul.dataset.ref +
+              "</span>";
+          }
+
+          countEl.textContent = found.size + " / " + TOTAL;
+          whisper("“" + ul.textContent.trim() + "” — " + ul.dataset.ref);
+
+          if (found.size === TOTAL) finale();
+        }
+
+        function finale() {
+          const slots = Array.from(slotsEl.children);
+          slots.forEach((s, i) => {
+            setTimeout(
+              () => {
+                s.classList.remove("pulse");
+                void s.offsetWidth;
+                s.classList.add("pulse");
+              },
+              500 + i * 140,
+            );
+          });
+          setTimeout(() => whisper("아홉 줄이 이어졌다.", true), 400);
+        }
+
+        // ===== 지도 =====
+        function openMap() {
+          if (!mapImg.getAttribute("src")) mapImg.src = MAP_SRC;
+          overlay.hidden = false;
+          mapImg.classList.remove("unfold");
+          void mapImg.offsetWidth;
+          mapImg.classList.add("unfold");
+          $("#closeMap").focus();
+        }
+
+        function closeMap() {
+          overlay.hidden = true;
+        }
+
+        function reset() {
+          found.clear();
+          uls.forEach((u) => {
+            u.classList.remove("found");
+            u.removeAttribute("data-roman");
+            u.setAttribute("aria-pressed", "false");
+          });
+          buildSlots();
+          countEl.textContent = "0 / " + TOTAL;
+          whisper("");
+          openMapBtn.hidden = true;
+
+          book.classList.add("instant");
+          leaves.forEach((l) => l.classList.remove("flipped", "turning"));
+          cur = 0;
+          side = "R";
+          zFix();
+          position();
+          void book.offsetWidth;
+          book.classList.remove("instant");
+        }
+
+        // ===== 이벤트 =====
+        uls.forEach((u) => {
+          u.setAttribute("role", "button");
+          u.setAttribute("tabindex", "0");
+          u.setAttribute("aria-pressed", "false");
+          u.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              collect(u);
+            }
+          });
+        });
+
+        let downX = 0,
+          downY = 0,
+          swiped = false;
+        viewport.addEventListener("pointerdown", (e) => {
+          downX = e.clientX;
+          downY = e.clientY;
+          swiped = false;
+        });
+        viewport.addEventListener("pointerup", (e) => {
+          const dx = e.clientX - downX,
+            dy = e.clientY - downY;
+          if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+            swiped = true;
+            dx < 0 ? next() : prev();
+          }
+        });
+
+        viewport.addEventListener("click", (e) => {
+          if (swiped) {
+            swiped = false;
+            return;
+          }
+          const ul = e.target.closest(".ul");
+          if (ul) {
+            collect(ul);
+            return;
+          }
+          if (!single && cur === 0) {
+            next();
+            return;
+          }
+          if (!single && cur === N) {
+            prev();
+            return;
+          }
+          const r = viewport.getBoundingClientRect();
+          e.clientX - r.left < r.width / 2 ? prev() : next();
+        });
+
+        prevBtn.addEventListener("click", prev);
+        nextBtn.addEventListener("click", next);
+        openMapBtn.addEventListener("click", openMap);
+        $("#closeMap").addEventListener("click", closeMap);
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) closeMap();
+        });
+        $("#resetBtn").addEventListener("click", reset);
+
+        document.addEventListener("keydown", (e) => {
+          if (!overlay.hidden) {
+            if (e.key === "Escape") closeMap();
+            return;
+          }
+          if (e.target.closest && e.target.closest(".ul")) return;
+          if (e.key === "ArrowRight") next();
+          if (e.key === "ArrowLeft") prev();
+        });
+
+        let rt;
+        window.addEventListener("resize", () => {
+          clearTimeout(rt);
+          rt = setTimeout(layout, 120);
+        });
+
+        // ===== 시작 =====
+        buildSlots();
+        countEl.textContent = "0 / " + TOTAL;
+        zFix();
+        layout();
+      })();
+    </script>
+  </body>
+</html>
