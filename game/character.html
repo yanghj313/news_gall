@@ -127,6 +127,21 @@
 				color: var(--dim);
 				text-align: center;
 			}
+			/* 전신 이미지 (투명 배경) 뒤에 은은한 배경 */
+			.portrait {
+				background:
+					radial-gradient(ellipse 70% 55% at 50% 45%, rgba(240, 139, 180, 0.28), transparent 70%),
+					radial-gradient(circle at 50% 35%, #2b2235, #0e0b13);
+			}
+			body[data-char='wooyo'] .portrait {
+				background:
+					radial-gradient(ellipse 70% 55% at 50% 45%, rgba(163, 36, 58, 0.4), transparent 70%),
+					radial-gradient(circle at 50% 35%, #2a1c22, #0b0809);
+			}
+			.portrait img {
+				object-fit: contain;
+				filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.7));
+			}
 			.portrait {
 				aspect-ratio: 3 / 4;
 				border: 1px solid var(--frame);
@@ -344,7 +359,7 @@
 	</head>
 	<body data-char="ruby">
 		<header class="topbar">
-			<a class="logo-mini" href="index.html">BLOODLORD</a>
+			<a class="logo-mini" href="index.html"><img src="img/logo-sm.webp" alt="BLOODROAD" /></a>
 			<span class="crumb">캐릭터 정보</span>
 			<nav>
 				<a class="g-btn" href="index.html">광장 <kbd>M</kbd></a>
@@ -422,6 +437,7 @@
 					lv: 92,
 					status: '접속 중',
 					portrait: 'img/ruby.webp',
+					face: 'img/ruby-face.webp',
 					fallback: 'assets/ph-ruby.svg',
 					hp: [18240, 18240], mp: [42100, 42100], xp: 71,
 					items: [
@@ -443,14 +459,15 @@
 					lv: 94,
 					status: '접속 중',
 					portrait: 'img/wooyo.webp',
+					face: 'img/wooyo-face.webp',
 					fallback: 'assets/ph-wooyo.svg',
 					hp: [96400, 96400], mp: [11200, 11200], xp: 38,
 					items: [
 						{ slot: '머리', icon: '⛑️', rare: 'normal', name: '투구 (외형 숨김)', type: '판금 투구', opts: ['방어력 +210'], desc: '외형 숨김이 켜져 있다. 그래서 검은 장발이 그대로 보인다.' },
-						{ slot: '몸', icon: '🛡️', rare: 'legend', name: '흑요 판금 갑옷', type: '판금 갑옷', opts: ['방어력 +1880', '생명력 +6400'], fx: '광장에 서 있기만 해도 구경꾼이 모인다.', desc: '검게 번들거리는 갑옷. 희귀 장비로 도배한 고인물의 상징 같은 물건이다.' },
-						{ slot: '망토', icon: '🧣', rare: 'epic', name: '핏빛 망토', type: '망토', opts: ['위협 수준 +12%'], desc: '붉은 망토. 보스가 몸을 돌릴 때 가장 먼저 휘날린다.' },
-						{ slot: '무기', icon: '⚔️', rare: 'epic', name: '흑룡의 송곳니', type: '한손검', opts: ['공격력 +640', '위협 수준 +18%'], desc: '탱커치고 공격적인 선택. 주인은 "어그로는 때려서 잡는 것"이라고 주장한다.' },
-						{ slot: '방패', icon: '🔰', rare: 'legend', name: '망자의 성벽', type: '방패', opts: ['막기 확률 +22%', '어그로 유지 +30%'], fx: '[철벽의 맹세] — 뒤에 선 아군이 받는 피해 감소.', desc: '한 번 정한 자리에서 끝까지 버티게 해 주는 방패. 그 자리가 틀렸을 때도 끝까지 버틴다는 게 문제다.' },
+						{ slot: '몸', icon: '🦾', rare: 'legend', name: '흑요 판금 갑옷', type: '판금 갑옷', opts: ['방어력 +1880', '생명력 +6400'], fx: '광장에 서 있기만 해도 구경꾼이 모인다.', desc: '붉은 문양이 새겨진 검은 갑옷. 희귀 장비로 도배한 고인물의 상징 같은 물건이다.' },
+						{ slot: '망토', icon: '🧣', rare: 'epic', name: '핏빛 망토', type: '망토', opts: ['위협 수준 +12%'], desc: '검은 모피 깃이 달린 붉은 망토. 끝자락이 갈기갈기 찢겨 있다. 보스가 몸을 돌릴 때 가장 먼저 휘날린다.' },
+						{ slot: '무기', icon: '⚔️', rare: 'legend', name: '흑룡의 송곳니', type: '양손 대검', opts: ['공격력 +980', '위협 수준 +24%'], fx: '공격할 때마다 칼날의 붉은 균열이 맥박처럼 빛난다.', desc: '사람 키만 한 대검. 탱커치고 공격적인 선택이다. 주인은 "어그로는 때려서 잡는 것"이라고 주장한다.' },
+						{ slot: '어깨', icon: '🛡️', rare: 'legend', name: '망자의 성벽 견갑', type: '판금 견갑', opts: ['막기 확률 +22%', '어그로 유지 +30%'], fx: '[철벽의 맹세] — 뒤에 선 아군이 받는 피해 감소.', desc: '가시처럼 솟은 견갑. 한 번 정한 자리에서 끝까지 버티게 해 준다. 그 자리가 틀렸을 때도 끝까지 버틴다는 게 문제다.' },
 						{ slot: '장신구', icon: '🌷', rare: 'normal', name: '받은 꽃 한 송이', type: '장신구 · 버리기 불가', opts: ['효과 없음'], desc: '루비짱 님이 [꽃 건네기] 모션으로 준 꽃. 인벤토리 정리 때마다 살아남는다.', from: '루비짱 님에게서 받은 아이템' },
 					],
 					stats: [['방어력', 2940, 3000], ['생명력', 2700, 3000], ['힘', 1810, 2000], ['위협 수준', 1650, 2000], ['막기', 1220, 2000], ['낙사 저항', 0, 1000]],
@@ -477,7 +494,7 @@
 					b.dataset.id = key;
 					b.innerHTML = '<img alt="" /><span></span>';
 					b.querySelector('span').textContent = c.name + ' Lv.' + c.lv;
-					setImg(b.querySelector('img'), c.portrait, c.fallback);
+					setImg(b.querySelector('img'), c.face || c.portrait, c.fallback);
 					b.addEventListener('click', function () { show(key, true); });
 					tabs.appendChild(b);
 				});
