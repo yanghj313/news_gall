@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="noindex" />
+		<title>채팅 기록 · 블러드로드 온라인</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" />
+		<link rel="stylesheet" href="assets/game.css" />
+		<style>
+			body {
+				background:
+					radial-gradient(ellipse 80% 50% at 50% 0%, rgba(163, 36, 58, 0.2), transparent 70%),
+					var(--bg);
+				min-height: 100dvh;
+			}
+			.journal {
+				max-width: 760px;
+				margin: 0 auto;
+				padding: 20px 16px 56px;
+			}
+			.journal-head {
+				display: flex;
+				align-items: flex-end;
+				justify-content: space-between;
+				gap: 12px;
+				margin-bottom: 14px;
+				flex-wrap: wrap;
+			}
+			.journal-head h1 {
+				margin: 0;
+				font-family: var(--f-story);
+				font-size: 24px;
+				color: var(--gold-hi);
+			}
+			.journal-head p {
+				margin: 4px 0 0;
+				color: var(--dim);
+				font-size: 12.5px;
+			}
+			.legend {
+				display: flex;
+				gap: 10px;
+				font-size: 11.5px;
+			}
+			.legend span::before,
+			.chs i {
+				content: '';
+				display: inline-block;
+				width: 8px;
+				height: 8px;
+				margin-right: 4px;
+				border-radius: 50%;
+				background: currentColor;
+			}
+			.c-party {
+				color: var(--ch-party);
+			}
+			.c-guild {
+				color: var(--ch-guild);
+			}
+			.c-whisper {
+				color: var(--ch-whisper);
+			}
+			.c-system {
+				color: var(--ch-system);
+			}
+
+			.entries {
+				list-style: none;
+				margin: 0;
+				padding: 6px;
+			}
+			.entries li + li {
+				border-top: 1px solid rgba(110, 86, 49, 0.35);
+			}
+			.entries a {
+				display: grid;
+				grid-template-columns: 44px minmax(0, 1fr) auto;
+				align-items: center;
+				gap: 12px;
+				padding: 12px 10px;
+				text-decoration: none;
+				transition: background 0.15s;
+			}
+			.entries a:hover {
+				background: rgba(217, 181, 107, 0.08);
+			}
+			.entries .num {
+				font-family: var(--f-head);
+				font-size: 18px;
+				color: var(--gold);
+				text-align: center;
+			}
+			.entries .t {
+				display: block;
+				font-family: var(--f-story);
+				font-size: 15.5px;
+				font-weight: 700;
+				color: var(--text);
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+			.entries .p {
+				display: block;
+				font-size: 12px;
+				color: var(--dim);
+				margin-top: 1px;
+			}
+			.entries .chs {
+				display: flex;
+				gap: 2px;
+			}
+			.entries .chs i {
+				margin: 0;
+			}
+			.entries a:hover .t {
+				color: var(--gold-hi);
+			}
+		</style>
+	</head>
+	<body>
+		<header class="topbar">
+			<a class="logo-mini" href="index.html">BLOODLORD</a>
+			<span class="crumb">채팅 기록</span>
+			<nav>
+				<a class="g-btn" href="index.html">광장 <kbd>M</kbd></a>
+				<a class="g-btn" href="character.html">캐릭터 <kbd>C</kbd></a>
+			</nav>
+		</header>
+
+		<main class="journal">
+			<div class="journal-head">
+				<div>
+					<h1>채팅 기록</h1>
+					<p>루비짱과 킹우요의 대화가 남아 있습니다. 항목을 누르면 자동으로 재생됩니다.</p>
+				</div>
+				<div class="legend">
+					<span class="c-party">파티</span>
+					<span class="c-guild">길드</span>
+					<span class="c-whisper">귓속말</span>
+					<span class="c-system">시스템</span>
+				</div>
+			</div>
+
+			<section class="panel">
+				<div class="panel-title">CHAT LOG <small id="count"></small></div>
+				<!-- 목록은 assets/scenes.js 순서대로 자동 생성됩니다 -->
+				<ol class="entries" id="entries"></ol>
+			</section>
+		</main>
+
+		<p class="ai-note">※ 세부 이미지는 AI로 제작되었습니다.</p>
+
+		<script src="assets/scenes.js"></script>
+		<script>
+			(function () {
+				var ol = document.getElementById('entries');
+				var list = window.SCENES || [];
+				document.getElementById('count').textContent = '총 ' + list.length + '건';
+				list.forEach(function (s, i) {
+					var li = document.createElement('li');
+					var a = document.createElement('a');
+					a.href = s.file;
+					a.innerHTML =
+						'<span class="num">' + String(i + 1).padStart(2, '0') + '</span>' +
+						'<span><span class="t"></span><span class="p"></span></span>' +
+						'<span class="chs">' +
+						s.ch.map(function (c) { return '<i class="c-' + c + '" title="' + (window.CH_LABEL[c] || c) + '"></i>'; }).join('') +
+						'</span>';
+					a.querySelector('.t').textContent = s.title;
+					a.querySelector('.p').textContent = s.place;
+					li.appendChild(a);
+					ol.appendChild(li);
+				});
+			})();
+		</script>
+		<script src="assets/keys.js"></script>
+	</body>
+</html>

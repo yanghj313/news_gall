@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="noindex" />
+		<title>루비짱 님이 접속했습니다 · 블러드로드 온라인</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" />
+		<link rel="stylesheet" href="assets/game.css" />
+		<link rel="stylesheet" href="assets/chat.css" />
+	</head>
+	<!--
+		data-me      : 내 캐릭터 (귓속말 To 표시 기준)
+		data-partner : 귓속말 상대
+		data-start   : 첫 줄 시각
+		data-party   : 이름:역할,이름:역할 (없으면 파티창 숨김)
+	-->
+	<body class="chat-page" data-me="킹우요" data-partner="루비짱" data-start="23:40">
+		<header class="topbar">
+			<a class="logo-mini" href="index.html">BLOODLORD</a>
+			<span class="crumb">채팅 기록 · 루비짱 님이 접속했습니다</span>
+			<nav>
+				<a class="g-btn" href="log.html">기록 <kbd>L</kbd></a>
+				<a class="g-btn" href="character.html">캐릭터 <kbd>C</kbd></a>
+			</nav>
+		</header>
+
+		<!-- 배경 이미지: img/scene-14.webp 파일을 넣으면 자동으로 깔립니다 -->
+		<div class="scene-bg"><img src="img/scene-14.webp" alt="" onerror="this.remove()" /></div>
+		<div class="fx-layer" aria-hidden="true"></div>
+
+		<main class="scene">
+			<section class="scene-head">
+				<div>
+					<div class="no">CHAPTER 14</div>
+					<h1>루비짱 님이 접속했습니다</h1>
+				</div>
+				<div class="place">마을 광장 분수대</div>
+			</section>
+
+			<aside class="party panel">
+				<div class="panel-title">PARTY</div>
+				<ul></ul>
+			</aside>
+
+			<section class="chatwin panel">
+				<div class="chat-tabs"></div>
+				<div class="chat-log" aria-live="polite"></div>
+				<div class="typing"></div>
+				<div class="chat-input"><b>[킹우요]</b> 메시지를 입력하세요…</div>
+			</section>
+
+			<div class="controls">
+				<div class="grp">
+					<button class="g-btn" type="button" data-act="toggle">▶ 재생</button>
+					<button class="g-btn" type="button" data-act="replay">↺ 다시보기</button>
+					<button class="g-btn" type="button" data-act="all">전체 보기</button>
+				</div>
+				<div class="grp">
+					<button class="g-btn" type="button" data-act="speed">속도 ×1</button>
+				</div>
+			</div>
+
+			<nav class="scene-nav">
+				<a class="g-btn prev" href="#">◀ 이전</a>
+				<a class="g-btn" href="log.html">목록</a>
+				<a class="g-btn next" href="#">다음 ▶</a>
+			</nav>
+		</main>
+
+		<!-- ===== 대사 스크립트: 위에서부터 순서대로 재생됩니다 ===== -->
+		<template id="script">
+			<p data-ch="guild" data-who="흑룡기사">우리 오늘 힐러 한 명 부족</p>
+			<p data-ch="guild" data-who="킹우요">잠깐 기다려</p>
+			<p data-ch="guild" data-who="흑룡기사">누굴?</p>
+			<p data-ch="guild" data-who="킹우요">루비</p>
+			<p data-ch="guild" data-who="흑룡기사">계정 탈퇴했다며</p>
+			<p data-ch="divider">— 한 시간 뒤 —</p>
+			<p data-ch="system" data-ts="00:41">루비짱 님이 접속했습니다.</p>
+			<p data-ch="guild" data-who="이올쿄">?????</p>
+			<p data-ch="guild" data-who="흑룡기사">헐 루비 복귀함????</p>
+			<p data-ch="guild" data-who="토끼발">루지쨔아아아앙ㅠㅠㅠㅠ</p>
+			<p data-ch="system" data-fx="shake">킹우요 님이 마을 광장 분수대로 이동합니다.</p>
+			<p data-ch="system" data-fx="petals">루비짱 님의 [성녀의 눈물]에서 장미 꽃잎이 흩날립니다.</p>
+			<p data-ch="whisper" data-who="킹우요">루비????</p>
+			<p data-ch="whisper" data-who="킹우요">진짜 돌아왔어?????????</p>
+			<p data-ch="whisper" data-who="루비짱">시끄러워ㅋㅋ</p>
+			<p data-ch="whisper" data-who="킹우요">나 눈물 나ㅠㅠㅠ</p>
+			<p data-ch="whisper" data-who="루비짱">오버하지 마</p>
+			<p data-ch="whisper" data-who="킹우요">보고 싶었어</p>
+			<p data-ch="whisper" data-who="루비짱">오늘도 봤잖아</p>
+			<p data-ch="whisper" data-who="킹우요">그거랑 이거랑 다르지</p>
+			<p data-ch="system" data-fx="hearts">킹우요 님이 [하트] 모션을 사용했습니다.</p>
+			<p data-ch="system" data-fx="petals">루비짱 님이 [꽃 건네기] 모션을 사용했습니다.</p>
+			<p data-ch="system">킹우요 님이 꽃을 받았습니다.</p>
+		</template>
+
+		<p class="ai-note">※ 세부 이미지는 AI로 제작되었습니다.</p>
+
+		<script src="assets/scenes.js"></script>
+		<script src="assets/chat.js"></script>
+		<script src="assets/keys.js"></script>
+	</body>
+</html>

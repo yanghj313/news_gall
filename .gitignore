@@ -1,8 +1,6 @@
 # 원고 / 작업 파일
 *.docx
 
-# 화면 캡처 이미지
-*.png
 
 # OS
 Thumbs.db

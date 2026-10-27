@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="noindex" />
+		<title>이미 내 팀임 · 블러드로드 온라인</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" />
+		<link rel="stylesheet" href="assets/game.css" />
+		<link rel="stylesheet" href="assets/chat.css" />
+	</head>
+	<!--
+		data-me      : 내 캐릭터 (귓속말 To 표시 기준)
+		data-partner : 귓속말 상대
+		data-start   : 첫 줄 시각
+		data-party   : 이름:역할,이름:역할 (없으면 파티창 숨김)
+	-->
+	<body class="chat-page" data-me="루비짱" data-partner="킹우요" data-start="21:47">
+		<header class="topbar">
+			<a class="logo-mini" href="index.html">BLOODLORD</a>
+			<span class="crumb">채팅 기록 · 이미 내 팀임</span>
+			<nav>
+				<a class="g-btn" href="log.html">기록 <kbd>L</kbd></a>
+				<a class="g-btn" href="character.html">캐릭터 <kbd>C</kbd></a>
+			</nav>
+		</header>
+
+		<!-- 배경 이미지: img/scene-05.webp 파일을 넣으면 자동으로 깔립니다 -->
+		<div class="scene-bg"><img src="img/scene-05.webp" alt="" onerror="this.remove()" /></div>
+		<div class="fx-layer" aria-hidden="true"></div>
+
+		<main class="scene">
+			<section class="scene-head">
+				<div>
+					<div class="no">CHAPTER 05</div>
+					<h1>이미 내 팀임</h1>
+				</div>
+				<div class="place">흑기사단 길드 채팅</div>
+			</section>
+
+			<aside class="party panel">
+				<div class="panel-title">PARTY</div>
+				<ul></ul>
+			</aside>
+
+			<section class="chatwin panel">
+				<div class="chat-tabs"></div>
+				<div class="chat-log" aria-live="polite"></div>
+				<div class="typing"></div>
+				<div class="chat-input"><b>[루비짱]</b> 메시지를 입력하세요…</div>
+			</section>
+
+			<div class="controls">
+				<div class="grp">
+					<button class="g-btn" type="button" data-act="toggle">▶ 재생</button>
+					<button class="g-btn" type="button" data-act="replay">↺ 다시보기</button>
+					<button class="g-btn" type="button" data-act="all">전체 보기</button>
+				</div>
+				<div class="grp">
+					<button class="g-btn" type="button" data-act="speed">속도 ×1</button>
+				</div>
+			</div>
+
+			<nav class="scene-nav">
+				<a class="g-btn prev" href="#">◀ 이전</a>
+				<a class="g-btn" href="log.html">목록</a>
+				<a class="g-btn next" href="#">다음 ▶</a>
+			</nav>
+		</main>
+
+		<!-- ===== 대사 스크립트: 위에서부터 순서대로 재생됩니다 ===== -->
+		<template id="script">
+			<p data-ch="guild" data-who="흑룡기사">루비 오늘 우리 팀 힐러 ㄱ?</p>
+			<p data-ch="guild" data-who="킹우요">안됨</p>
+			<p data-ch="guild" data-who="흑룡기사">왜ㅋㅋ</p>
+			<p data-ch="guild" data-who="킹우요">이미 내 팀임</p>
+			<p data-ch="guild" data-who="루비짱">나한테 먼저 물어봐야지ㅋㅋ</p>
+			<p data-ch="guild" data-who="킹우요">그럼 루비야 내 팀 할래?</p>
+			<p data-ch="guild" data-who="루비짱">싫다면?</p>
+			<p data-ch="guild" data-who="킹우요">부탁할게요 루비쌤ㅠㅠ끼잉끼잉</p>
+			<p data-ch="guild" data-who="루비짱">ㅋㅋㅋㅋㅋ 알았어</p>
+			<p data-ch="system">루비짱 님이 킹우요 님의 파티에 참가했습니다.</p>
+		</template>
+
+		<p class="ai-note">※ 세부 이미지는 AI로 제작되었습니다.</p>
+
+		<script src="assets/scenes.js"></script>
+		<script src="assets/chat.js"></script>
+		<script src="assets/keys.js"></script>
+	</body>
+</html>

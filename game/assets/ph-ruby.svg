@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <!-- 이미지 없을 때 쓰는 임시 일러스트: 루비짱 (백금발 양갈래 / 연분홍 눈 / 꽃무늬 드레스) -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="70%">
+      <stop offset="0" stop-color="#5a2f4e"/>
+      <stop offset="1" stop-color="#140c17"/>
+    </radialGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbf5e6"/>
+      <stop offset="1" stop-color="#d9cdb0"/>
+    </linearGradient>
+    <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff7f9"/>
+      <stop offset="1" stop-color="#f1c9d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#bg)"/>
+  <g fill="#ffb3cf" opacity=".55">
+    <circle cx="40" cy="70" r="3"/><circle cx="262" cy="110" r="2.5"/><circle cx="235" cy="40" r="2"/>
+    <circle cx="60" cy="300" r="2.5"/><circle cx="250" cy="330" r="3"/>
+  </g>
+  <!-- 양갈래 -->
+  <path d="M96 130 C60 170 52 250 70 330 C80 345 96 340 98 322 C92 260 100 200 118 160Z" fill="url(#hair)"/>
+  <path d="M204 130 C240 170 248 250 230 330 C220 345 204 340 202 322 C208 260 200 200 182 160Z" fill="url(#hair)"/>
+  <circle cx="104" cy="132" r="9" fill="#e85d8c"/><circle cx="196" cy="132" r="9" fill="#e85d8c"/>
+  <!-- 몸/드레스 -->
+  <path d="M112 236 C120 222 180 222 188 236 L222 400 L78 400Z" fill="url(#dress)"/>
+  <path d="M112 236 C130 250 170 250 188 236 L180 262 C160 270 140 270 120 262Z" fill="#e8a3bd"/>
+  <g fill="#e2678f">
+    <circle cx="110" cy="360" r="5"/><circle cx="150" cy="378" r="5"/><circle cx="190" cy="356" r="5"/>
+    <circle cx="128" cy="320" r="4"/><circle cx="172" cy="312" r="4"/>
+  </g>
+  <!-- 얼굴 -->
+  <path d="M136 210 h28 v24 h-28z" fill="#f5d8cb"/>
+  <ellipse cx="150" cy="168" rx="46" ry="50" fill="#f8e2d6"/>
+  <path d="M102 160 C104 112 196 112 198 160 C186 140 170 132 150 134 C130 132 114 140 102 160Z" fill="url(#hair)"/>
+  <path d="M120 136 C132 158 140 150 146 140 C152 152 166 160 180 138 Z" fill="url(#hair)"/>
+  <ellipse cx="132" cy="176" rx="8" ry="10" fill="#f39abd"/><ellipse cx="168" cy="176" rx="8" ry="10" fill="#f39abd"/>
+  <circle cx="134" cy="173" r="3" fill="#fff"/><circle cx="170" cy="173" r="3" fill="#fff"/>
+  <ellipse cx="124" cy="194" rx="8" ry="4" fill="#f6a9c0" opacity=".55"/><ellipse cx="176" cy="194" rx="8" ry="4" fill="#f6a9c0" opacity=".55"/>
+  <path d="M144 198 q6 5 12 0" stroke="#c0566f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <!-- 지팡이 -->
+  <rect x="236" y="150" width="6" height="250" rx="3" fill="#dfe2ea"/>
+  <circle cx="239" cy="142" r="13" fill="#c6243f" stroke="#f1f2f6" stroke-width="3"/>
+  <circle cx="235" cy="138" r="4" fill="#ff9cb0"/>
+  <text x="150" y="388" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" opacity=".45">IMAGE SLOT · ruby</text>
+</svg>

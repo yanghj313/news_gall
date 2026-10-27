@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="noindex" />
+		<title>이번 주엔 오른쪽 · 블러드로드 온라인</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" />
+		<link rel="stylesheet" href="assets/game.css" />
+		<link rel="stylesheet" href="assets/chat.css" />
+	</head>
+	<!--
+		data-me      : 내 캐릭터 (귓속말 To 표시 기준)
+		data-partner : 귓속말 상대
+		data-start   : 첫 줄 시각
+		data-party   : 이름:역할,이름:역할 (없으면 파티창 숨김)
+	-->
+	<body class="chat-page" data-me="루비짱" data-partner="킹우요" data-start="03:21" data-party="킹우요:탱커,루비짱:힐러,흑룡기사:딜러,이올쿄:딜러,토끼발:딜러,삼성동네이마르:딜러">
+		<header class="topbar">
+			<a class="logo-mini" href="index.html">BLOODLORD</a>
+			<span class="crumb">채팅 기록 · 이번 주엔 오른쪽</span>
+			<nav>
+				<a class="g-btn" href="log.html">기록 <kbd>L</kbd></a>
+				<a class="g-btn" href="character.html">캐릭터 <kbd>C</kbd></a>
+			</nav>
+		</header>
+
+		<!-- 배경 이미지: img/scene-04.webp 파일을 넣으면 자동으로 깔립니다 -->
+		<div class="scene-bg"><img src="img/scene-04.webp" alt="" onerror="this.remove()" /></div>
+		<div class="fx-layer" aria-hidden="true"></div>
+
+		<main class="scene">
+			<section class="scene-head">
+				<div>
+					<div class="no">CHAPTER 04</div>
+					<h1>이번 주엔 오른쪽</h1>
+				</div>
+				<div class="place">새벽 레이드 · 세 번째 보스</div>
+			</section>
+
+			<aside class="party panel">
+				<div class="panel-title">PARTY</div>
+				<ul></ul>
+			</aside>
+
+			<section class="chatwin panel">
+				<div class="chat-tabs"></div>
+				<div class="chat-log" aria-live="polite"></div>
+				<div class="typing"></div>
+				<div class="chat-input"><b>[루비짱]</b> 메시지를 입력하세요…</div>
+			</section>
+
+			<div class="controls">
+				<div class="grp">
+					<button class="g-btn" type="button" data-act="toggle">▶ 재생</button>
+					<button class="g-btn" type="button" data-act="replay">↺ 다시보기</button>
+					<button class="g-btn" type="button" data-act="all">전체 보기</button>
+				</div>
+				<div class="grp">
+					<button class="g-btn" type="button" data-act="speed">속도 ×1</button>
+				</div>
+			</div>
+
+			<nav class="scene-nav">
+				<a class="g-btn prev" href="#">◀ 이전</a>
+				<a class="g-btn" href="log.html">목록</a>
+				<a class="g-btn next" href="#">다음 ▶</a>
+			</nav>
+		</main>
+
+		<!-- ===== 대사 스크립트: 위에서부터 순서대로 재생됩니다 ===== -->
+		<template id="script">
+			<p data-ch="system" data-fx="shake">세 번째 보스의 생명력이 50% 아래로 떨어졌습니다. 바닥의 문양이 거꾸로 돌기 시작합니다.</p>
+			<p data-ch="party" data-who="킹우요">루비 왼쪽으로 와</p>
+			<p data-ch="party" data-who="루비짱">이번 주엔 오른쪽이 나음</p>
+			<p data-ch="party" data-who="킹우요">내 말 들어 일단</p>
+			<p data-ch="party" data-who="루비짱">우요야 영상 봤어? 보스 방향 바뀜</p>
+			<p data-ch="party" data-who="킹우요">알아 내가 유도할게</p>
+			<p data-ch="system">파티원들이 킹우요 님을 따라 왼쪽으로 이동합니다.</p>
+			<p data-ch="system" data-wait="1600">루비짱 님이 오른쪽 계단으로 이동했습니다.</p>
+			<p data-ch="alert" data-fx="flash shake">왼쪽 바닥이 붉게 변합니다!</p>
+			<p data-ch="alert" data-fx="dead:토끼발">토끼발 님이 사망했습니다.</p>
+			<p data-ch="alert" data-fx="dead:삼성동네이마르">삼성동네이마르 님이 사망했습니다.</p>
+			<p data-ch="party" data-who="킹우요">잠깐 리트</p>
+			<p data-ch="party" data-who="루비짱">내가 오른쪽이라 했잖아</p>
+			<p data-ch="party" data-who="킹우요">알아 미안</p>
+			<p data-ch="party" data-who="킹우요">다시 가자 이번엔 루비 핑 따라</p>
+			<p data-ch="divider">— 재도전 —</p>
+			<p data-ch="system" data-fx="alive:all">킹우요 님이 루비짱 님의 머리 위에 [화살표] 표시를 남겼습니다.</p>
+			<p data-ch="system" data-fx="shake">보스가 몸을 돌립니다. 킹우요 님이 먼저 그쪽을 바라봅니다.</p>
+			<p data-ch="system" data-fx="petals">루비짱 님이 위험 구간을 지나며 [장미빛 축복]을 시전했습니다.</p>
+			<p data-ch="system">레이드 보스를 처치했습니다! 파티원 전원 생존.</p>
+			<p data-ch="divider">— 흑기사단 길드 광장 —</p>
+			<p data-ch="whisper" data-who="킹우요">아까 내가 오더 잘못했어</p>
+			<p data-ch="whisper" data-who="루비짱">ㅇㅇ 바보ㅋㅋ</p>
+			<p data-ch="whisper" data-who="킹우요">근데 다음에도 나랑 가</p>
+			<p data-ch="whisper" data-who="루비짱">왜 또ㅋㅋ</p>
+			<p data-ch="whisper" data-who="킹우요">틀릴 때마다 네가 잡아 줘야지</p>
+		</template>
+
+		<p class="ai-note">※ 세부 이미지는 AI로 제작되었습니다.</p>
+
+		<script src="assets/scenes.js"></script>
+		<script src="assets/chat.js"></script>
+		<script src="assets/keys.js"></script>
+	</body>
+</html>

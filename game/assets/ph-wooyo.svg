@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <!-- 이미지 없을 때 쓰는 임시 일러스트: 킹우요 (검은 장발 / 붉은 망토 / 검은 갑옷 / 방패) -->
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="70%">
+      <stop offset="0" stop-color="#3c1f22"/>
+      <stop offset="1" stop-color="#0b0809"/>
+    </radialGradient>
+    <linearGradient id="armor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b3d47"/>
+      <stop offset=".5" stop-color="#16171c"/>
+      <stop offset="1" stop-color="#2c2e36"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="400" fill="url(#bg)"/>
+  <!-- 망토 -->
+  <path d="M84 220 C70 290 60 360 50 400 L250 400 C240 360 230 290 216 220Z" fill="#8f1b28"/>
+  <path d="M84 220 C80 300 96 360 110 400 L80 400 C70 340 74 280 84 220Z" fill="#5d0f19"/>
+  <!-- 장발 뒤쪽 -->
+  <path d="M104 130 C88 200 92 260 108 300 L192 300 C208 260 212 200 196 130Z" fill="#0d0c10"/>
+  <!-- 갑옷 -->
+  <path d="M96 224 C110 206 190 206 204 224 L214 400 L86 400Z" fill="url(#armor)"/>
+  <path d="M78 214 C92 196 120 200 124 226 L104 250 L72 240Z" fill="#26272e" stroke="#7a6a48" stroke-width="2"/>
+  <path d="M222 214 C208 196 180 200 176 226 L196 250 L228 240Z" fill="#26272e" stroke="#7a6a48" stroke-width="2"/>
+  <path d="M150 230 v150" stroke="#7a6a48" stroke-width="2" opacity=".6"/>
+  <path d="M120 260 h60 M116 300 h68" stroke="#000" stroke-width="2" opacity=".5"/>
+  <!-- 얼굴 -->
+  <rect x="137" y="196" width="26" height="22" fill="#e3c4b2"/>
+  <ellipse cx="150" cy="160" rx="40" ry="46" fill="#ecd0be"/>
+  <path d="M108 160 C104 108 196 104 194 160 C186 132 168 124 150 126 C130 124 116 132 108 160Z" fill="#0d0c10"/>
+  <path d="M110 150 C112 200 108 240 100 280 L112 280 C120 236 124 190 120 150Z" fill="#0d0c10"/>
+  <path d="M190 150 C188 200 192 240 200 280 L188 280 C180 236 176 190 180 150Z" fill="#0d0c10"/>
+  <path d="M126 160 l14 4 M174 160 l-14 4" stroke="#1a1416" stroke-width="3.5" stroke-linecap="round"/>
+  <ellipse cx="135" cy="172" rx="5" ry="4.5" fill="#2a1a1a"/><ellipse cx="165" cy="171" rx="5.5" ry="5" fill="#2a1a1a"/>
+  <path d="M142 194 q8 3 16 -1" stroke="#9c5a52" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <circle cx="111" cy="176" r="2.6" fill="#d7dbe2"/><circle cx="189" cy="176" r="2.6" fill="#d7dbe2"/>
+  <!-- 방패 -->
+  <path d="M30 230 h64 v70 c0 40 -32 56 -32 56 c0 0 -32 -16 -32 -56Z" fill="#1c1d23" stroke="#a8864a" stroke-width="3"/>
+  <path d="M62 250 v84 M40 280 h44" stroke="#8f1b28" stroke-width="6"/>
+  <text x="150" y="388" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#fff" opacity=".45">IMAGE SLOT · wooyo</text>
+</svg>
