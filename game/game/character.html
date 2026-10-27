@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="noindex" />
+		<title>캐릭터 정보 · 블러드로드 온라인</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" />
+		<link rel="stylesheet" href="assets/game.css" />
+		<style>
+			body {
+				min-height: 100dvh;
+				background:
+					radial-gradient(ellipse 70% 50% at 30% 10%, rgba(240, 139, 180, 0.12), transparent 70%),
+					radial-gradient(ellipse 70% 50% at 80% 90%, rgba(163, 36, 58, 0.18), transparent 70%),
+					var(--bg);
+			}
+			body[data-char='wooyo'] {
+				background:
+					radial-gradient(ellipse 70% 50% at 30% 10%, rgba(163, 36, 58, 0.22), transparent 70%),
+					radial-gradient(ellipse 70% 50% at 80% 90%, rgba(60, 60, 90, 0.25), transparent 70%),
+					var(--bg);
+			}
+			.wrap {
+				max-width: 980px;
+				margin: 0 auto;
+				padding: 18px 16px 56px;
+			}
+
+			/* 캐릭터 탭 */
+			.char-tabs {
+				display: flex;
+				gap: 6px;
+				margin-bottom: 12px;
+			}
+			.char-tabs button {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 6px 14px 6px 6px;
+				background: rgba(0, 0, 0, 0.4);
+				border: 1px solid var(--mute);
+				color: var(--dim);
+				cursor: pointer;
+				border-radius: 2px;
+			}
+			.char-tabs button img {
+				width: 30px;
+				height: 30px;
+				object-fit: cover;
+				border-radius: 2px;
+			}
+			.char-tabs button.is-on {
+				border-color: var(--gold);
+				color: var(--gold-hi);
+				background: rgba(110, 86, 49, 0.25);
+			}
+
+			.charwin {
+				display: grid;
+				grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+			}
+			.charwin > .panel-title {
+				grid-column: 1 / -1;
+			}
+
+			/* 왼쪽: 장비 + 초상화 */
+			.paper {
+				padding: 16px;
+				border-right: 1px solid rgba(110, 86, 49, 0.5);
+			}
+			.equip {
+				display: grid;
+				grid-template-columns: 64px minmax(0, 1fr) 64px;
+				gap: 12px;
+				align-items: center;
+			}
+			.equip .col {
+				display: grid;
+				gap: 24px;
+			}
+			.slot {
+				position: relative;
+				width: 64px;
+				height: 64px;
+				display: grid;
+				place-items: center;
+				font-size: 28px;
+				background: radial-gradient(circle at 50% 40%, #2a2331, #0d0a11);
+				border: 1px solid #3a3326;
+				box-shadow: inset 0 0 0 1px #000, inset 0 0 12px rgba(0, 0, 0, 0.8);
+				cursor: pointer;
+				transition: transform 0.12s;
+				padding: 0;
+			}
+			.slot:hover {
+				transform: translateY(-1px);
+			}
+			.slot img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.slot[data-rare='legend'] {
+				border-color: var(--r-legend);
+				box-shadow: inset 0 0 0 1px #000, inset 0 0 14px rgba(255, 155, 61, 0.45), 0 0 10px rgba(255, 155, 61, 0.35);
+			}
+			.slot[data-rare='epic'] {
+				border-color: var(--r-epic);
+				box-shadow: inset 0 0 0 1px #000, inset 0 0 12px rgba(194, 123, 255, 0.35);
+			}
+			.slot[data-rare='rare'] {
+				border-color: var(--r-rare);
+			}
+			.slot.is-on {
+				outline: 2px solid var(--gold-hi);
+				outline-offset: 2px;
+			}
+			.slot small {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: -16px;
+				font-size: 10px;
+				color: var(--dim);
+				text-align: center;
+			}
+			/* 전신 이미지 (투명 배경) 뒤에 은은한 배경 */
+			.portrait {
+				background:
+					radial-gradient(ellipse 70% 55% at 50% 45%, rgba(240, 139, 180, 0.28), transparent 70%),
+					radial-gradient(circle at 50% 35%, #2b2235, #0e0b13);
+			}
+			body[data-char='wooyo'] .portrait {
+				background:
+					radial-gradient(ellipse 70% 55% at 50% 45%, rgba(163, 36, 58, 0.4), transparent 70%),
+					radial-gradient(circle at 50% 35%, #2a1c22, #0b0809);
+			}
+			.portrait img {
+				object-fit: contain;
+				filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.7));
+			}
+			.portrait {
+				aspect-ratio: 3 / 4;
+				border: 1px solid var(--frame);
+				box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 0, 0, 0.6);
+			}
+			.portrait .badge {
+				position: absolute;
+				left: 8px;
+				top: 8px;
+				padding: 2px 8px;
+				font-size: 11px;
+				background: rgba(0, 0, 0, 0.65);
+				border: 1px solid var(--frame);
+				color: var(--gold-hi);
+			}
+			.ident {
+				margin-top: 26px;
+				text-align: center;
+			}
+			.ident .guild {
+				font-size: 12px;
+				color: var(--ch-guild);
+			}
+			.ident h2 {
+				margin: 2px 0;
+				font-family: var(--f-story);
+				font-size: 24px;
+				color: var(--gold-hi);
+			}
+			.ident .cls {
+				font-size: 12.5px;
+				color: var(--dim);
+			}
+			.bars {
+				display: grid;
+				gap: 6px;
+				margin-top: 12px;
+				font-size: 11px;
+				color: var(--dim);
+			}
+			.bars label {
+				display: grid;
+				grid-template-columns: 26px minmax(0, 1fr) 76px;
+				align-items: center;
+				gap: 8px;
+			}
+			.bars b {
+				text-align: right;
+				font-weight: 400;
+				font-variant-numeric: tabular-nums;
+			}
+
+			/* 오른쪽: 상세 */
+			.detail {
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+			}
+			.sub-tabs {
+				display: flex;
+				border-bottom: 1px solid rgba(110, 86, 49, 0.5);
+			}
+			.sub-tabs button {
+				flex: 1;
+				padding: 9px 0;
+				background: none;
+				border: 0;
+				border-bottom: 2px solid transparent;
+				color: var(--dim);
+				cursor: pointer;
+				font-size: 13px;
+			}
+			.sub-tabs button.is-on {
+				color: var(--gold-hi);
+				border-bottom-color: var(--gold);
+			}
+			.pane {
+				padding: 14px 16px;
+			}
+			.pane[hidden] {
+				display: none;
+			}
+
+			/* 아이템 툴팁 */
+			.tip {
+				padding: 12px 14px;
+				background: rgba(0, 0, 0, 0.55);
+				border: 1px solid #3a3326;
+				min-height: 170px;
+			}
+			.tip h3 {
+				margin: 0;
+				font-family: var(--f-story);
+				font-size: 17px;
+			}
+			.tip .meta {
+				margin: 2px 0 8px;
+				font-size: 11.5px;
+				color: var(--dim);
+			}
+			.tip ul {
+				margin: 0 0 8px;
+				padding: 0;
+				list-style: none;
+				font-size: 13px;
+				color: #9fe39f;
+			}
+			.tip .fx {
+				color: var(--gold-hi);
+				font-size: 12.5px;
+				margin: 0 0 8px;
+			}
+			.tip .desc {
+				margin: 0;
+				font-family: var(--f-story);
+				font-size: 13px;
+				color: #cdbf9d;
+				line-height: 1.7;
+			}
+			.tip .from {
+				margin: 8px 0 0;
+				font-size: 11.5px;
+				color: var(--ch-whisper);
+			}
+			.hint {
+				margin: 10px 0 0;
+				font-size: 11.5px;
+				color: var(--mute);
+			}
+
+			/* 능력치 */
+			.stats {
+				display: grid;
+				gap: 8px;
+				margin: 0;
+			}
+			.stats div {
+				display: grid;
+				grid-template-columns: 70px minmax(0, 1fr) 44px;
+				align-items: center;
+				gap: 10px;
+				font-size: 12.5px;
+			}
+			.stats dt {
+				color: var(--dim);
+			}
+			.stats dd {
+				margin: 0;
+				text-align: right;
+				font-variant-numeric: tabular-nums;
+			}
+			.stats .gauge {
+				height: 7px;
+			}
+			.stats .gauge > i {
+				background: linear-gradient(90deg, #6e5631, var(--gold-hi));
+			}
+
+			/* 프로필 */
+			.prof {
+				display: grid;
+				grid-template-columns: 84px minmax(0, 1fr);
+				gap: 8px 12px;
+				margin: 0;
+				font-size: 13px;
+			}
+			.prof dt {
+				color: var(--dim);
+			}
+			.prof dd {
+				margin: 0;
+			}
+			.memo {
+				margin-top: 14px;
+				padding: 10px 12px;
+				border: 1px dashed rgba(255, 159, 208, 0.45);
+				background: rgba(255, 159, 208, 0.06);
+				font-size: 13px;
+			}
+			.memo b {
+				display: block;
+				font-size: 11px;
+				font-weight: 400;
+				color: var(--ch-whisper);
+				margin-bottom: 2px;
+			}
+			.actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+				margin-top: auto;
+				padding: 12px 16px 16px;
+			}
+
+			@media (max-width: 760px) {
+				.charwin {
+					grid-template-columns: minmax(0, 1fr);
+				}
+				.paper {
+					border-right: 0;
+					border-bottom: 1px solid rgba(110, 86, 49, 0.5);
+					padding: 14px 10px;
+				}
+				.equip {
+					grid-template-columns: 54px minmax(0, 1fr) 54px;
+					gap: 10px;
+				}
+				.slot {
+					width: 54px;
+					height: 54px;
+					font-size: 24px;
+				}
+			}
+		</style>
+	</head>
+	<body data-char="ruby">
+		<header class="topbar">
+			<a class="logo-mini" href="index.html"><img src="img/logo-sm.webp" alt="BLOODROAD" /></a>
+			<span class="crumb">캐릭터 정보</span>
+			<nav>
+				<a class="g-btn" href="index.html">광장 <kbd>M</kbd></a>
+				<a class="g-btn" href="log.html">기록 <kbd>L</kbd></a>
+			</nav>
+		</header>
+
+		<main class="wrap">
+			<div class="char-tabs" id="charTabs"></div>
+
+			<section class="panel charwin">
+				<div class="panel-title">CHARACTER <small id="status"></small></div>
+
+				<div class="paper">
+					<div class="equip">
+						<div class="col" id="colL"></div>
+						<!-- 초상화: img/ruby.webp, img/wooyo.webp 를 넣으면 교체됩니다 -->
+						<div class="img-slot portrait">
+							<img id="portrait" alt="" />
+							<span class="badge" id="lv"></span>
+						</div>
+						<div class="col" id="colR"></div>
+					</div>
+					<div class="ident">
+						<div class="guild" id="guild"></div>
+						<h2 id="name"></h2>
+						<div class="cls" id="cls"></div>
+					</div>
+					<div class="bars">
+						<label>HP <span class="gauge hp"><i id="hpBar"></i></span><b id="hpTxt"></b></label>
+						<label>MP <span class="gauge mp"><i id="mpBar"></i></span><b id="mpTxt"></b></label>
+						<label>EXP <span class="gauge xp"><i id="xpBar"></i></span><b id="xpTxt"></b></label>
+					</div>
+				</div>
+
+				<div class="detail">
+					<div class="sub-tabs" role="tablist">
+						<button type="button" class="is-on" data-pane="item">장비</button>
+						<button type="button" data-pane="stat">능력치</button>
+						<button type="button" data-pane="prof">프로필</button>
+					</div>
+					<div class="pane" data-pane="item">
+						<div class="tip" id="tip"></div>
+						<p class="hint">장비 칸을 누르면 상세 정보를 볼 수 있습니다.</p>
+					</div>
+					<div class="pane" data-pane="stat" hidden>
+						<dl class="stats" id="stats"></dl>
+					</div>
+					<div class="pane" data-pane="prof" hidden>
+						<dl class="prof" id="prof"></dl>
+						<div class="memo" id="memo"></div>
+					</div>
+					<div class="actions">
+						<button class="g-btn" type="button" id="btnHeart">♥ 하트</button>
+						<a class="g-btn" href="log.html">채팅 기록</a>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<div class="fx-layer" aria-hidden="true"></div>
+		<p class="ai-note">※ 세부 이미지는 AI로 제작되었습니다.</p>
+
+		<script>
+			/* =========================================================
+			   캐릭터 데이터 — 여기 내용만 고치면 화면이 바뀝니다.
+			   items[].img 에 이미지 경로를 넣으면 아이콘 대신 이미지가 보입니다.
+			   rare: legend(전설) / epic(영웅) / rare(희귀) / normal(일반)
+			   ========================================================= */
+			var CHARS = {
+				ruby: {
+					name: '루비짱',
+					guild: '[흑기사단]',
+					cls: '성녀 · 치유 담당',
+					lv: 92,
+					status: '접속 중',
+					portrait: 'img/ruby.webp',
+					face: 'img/ruby-face.webp',
+					fallback: 'assets/ph-ruby.svg',
+					hp: [18240, 18240], mp: [42100, 42100], xp: 71,
+					items: [
+						{ slot: '머리', icon: '🎀', rare: 'rare', name: '장미 리본 머리끈', type: '머리 장식', opts: ['정신력 +38'], desc: '백금발 양갈래를 묶는 분홍 리본. 마을 상점에서 파는 평범한 물건이지만 한 번도 바꾼 적이 없다.' },
+						{ slot: '몸', icon: '👗', rare: 'epic', name: '꽃자락 성가대 드레스', type: '천 갑옷', opts: ['치유력 +120', '생명력 +900'], desc: '스커트 자락에 작은 꽃무늬가 수놓여 있다. 무늬는 주인이 직접 골랐다.' },
+						{ slot: '손목', icon: '📿', rare: 'epic', name: '장미빛 기도 팔찌', type: '팔찌', opts: ['시전 속도 +6%'], fx: '마법을 쓸 때마다 손목 주변에 장미빛이 번진다.', desc: '힐러 의상과 맞춰 고른 장비. 오래 써서 강화 수치가 꽤 높다.' },
+						{ slot: '무기', icon: '🪄', rare: 'legend', name: '성녀의 눈물', type: '양손 지팡이', opts: ['치유력 +412', '정신력 +96', '시전 속도 +8%'], fx: '주문을 쓸 때마다 장미 꽃잎이 흩날린다.', desc: '몇 해 전 단 한 번 열린 이벤트에서만 얻을 수 있던 치유 지팡이. 은빛 손잡이 끝에 붉은 보석이 박혀 있다. 거래 게시판에 매물이 나온 적이 거의 없다.', from: '킹우요 님에게서 거래로 받은 아이템' },
+						{ slot: '반지', icon: '💍', rare: 'rare', name: '붉은 탄생석 반지', type: '반지', opts: ['치유력 +44'], desc: '붉은 보석 하나가 박힌 반지. 닉네임의 유래라는 소문이 있다.' },
+						{ slot: '인형', icon: '🐰', rare: 'normal', name: '리본 토끼 인형', type: '꾸미기 · 등에 메기', opts: ['효과 없음'], desc: '분홍 리본을 단 토끼. 귀 끝이 조금 닳았다. 장착하면 귀여워지는 것 외에는 아무 효과가 없다.' },
+					],
+					stats: [['치유력', 2870, 3000], ['정신력', 1460, 2000], ['지능', 1320, 2000], ['생명력', 980, 2000], ['방어력', 610, 2000], ['회피', 340, 1000]],
+					prof: [['칭호', '장미의 치유사'], ['외형', '백금발 양갈래 · 연분홍 눈'], ['계정', '고등학생 때부터 이어 온 계정'], ['선호 위치', '오른쪽 (장판 타이밍 맞춰 피함)'], ['상태 메시지', '낙사 구간 혼자 갈 수 있음']],
+					memo: ['킹우요 님이 남긴 친구 메모', '내 힐러'],
+				},
+				wooyo: {
+					name: '킹우요',
+					guild: '[흑기사단]',
+					cls: '흑철 수호기사 · 메인 탱커',
+					lv: 94,
+					status: '접속 중',
+					portrait: 'img/wooyo.webp',
+					face: 'img/wooyo-face.webp',
+					fallback: 'assets/ph-wooyo.svg',
+					hp: [96400, 96400], mp: [11200, 11200], xp: 38,
+					items: [
+						{ slot: '머리', icon: '⛑️', rare: 'normal', name: '투구 (외형 숨김)', type: '판금 투구', opts: ['방어력 +210'], desc: '외형 숨김이 켜져 있다. 그래서 검은 장발이 그대로 보인다.' },
+						{ slot: '몸', icon: '🦾', rare: 'legend', name: '흑요 판금 갑옷', type: '판금 갑옷', opts: ['방어력 +1880', '생명력 +6400'], fx: '광장에 서 있기만 해도 구경꾼이 모인다.', desc: '붉은 문양이 새겨진 검은 갑옷. 희귀 장비로 도배한 고인물의 상징 같은 물건이다.' },
+						{ slot: '망토', icon: '🧣', rare: 'epic', name: '핏빛 망토', type: '망토', opts: ['위협 수준 +12%'], desc: '검은 모피 깃이 달린 붉은 망토. 끝자락이 갈기갈기 찢겨 있다. 보스가 몸을 돌릴 때 가장 먼저 휘날린다.' },
+						{ slot: '무기', icon: '⚔️', rare: 'legend', name: '흑룡의 송곳니', type: '양손 대검', opts: ['공격력 +980', '위협 수준 +24%'], fx: '공격할 때마다 칼날의 붉은 균열이 맥박처럼 빛난다.', desc: '사람 키만 한 대검. 탱커치고 공격적인 선택이다. 주인은 "어그로는 때려서 잡는 것"이라고 주장한다.' },
+						{ slot: '어깨', icon: '🛡️', rare: 'legend', name: '망자의 성벽 견갑', type: '판금 견갑', opts: ['막기 확률 +22%', '어그로 유지 +30%'], fx: '[철벽의 맹세] — 뒤에 선 아군이 받는 피해 감소.', desc: '가시처럼 솟은 견갑. 한 번 정한 자리에서 끝까지 버티게 해 준다. 그 자리가 틀렸을 때도 끝까지 버틴다는 게 문제다.' },
+						{ slot: '장신구', icon: '🌷', rare: 'normal', name: '받은 꽃 한 송이', type: '장신구 · 버리기 불가', opts: ['효과 없음'], desc: '루비짱 님이 [꽃 건네기] 모션으로 준 꽃. 인벤토리 정리 때마다 살아남는다.', from: '루비짱 님에게서 받은 아이템' },
+					],
+					stats: [['방어력', 2940, 3000], ['생명력', 2700, 3000], ['힘', 1810, 2000], ['위협 수준', 1650, 2000], ['막기', 1220, 2000], ['낙사 저항', 0, 1000]],
+					prof: [['칭호', '흑기사단 메인 탱커'], ['외형', '키 190cm · 검은 장발 · 붉은 망토'], ['특기', '어그로 안 놓치기'], ['약점', '동굴 지름길, 낙사 구간'], ['상태 메시지', '내 뒤에 붙어']],
+					memo: ['루비짱 님이 남긴 친구 메모', '낙사 주의 / 오더 가끔 틀림 / 그래도 끝까지 막아 줌'],
+				},
+			};
+
+			(function () {
+				var $ = function (id) { return document.getElementById(id); };
+				var current = new URLSearchParams(location.search).get('id') === 'wooyo' ? 'wooyo' : 'ruby';
+
+				function setImg(img, src, fallback) {
+					img.onerror = function () { img.onerror = null; img.src = fallback; };
+					img.src = src;
+				}
+
+				// 캐릭터 탭
+				var tabs = $('charTabs');
+				Object.keys(CHARS).forEach(function (key) {
+					var c = CHARS[key];
+					var b = document.createElement('button');
+					b.type = 'button';
+					b.dataset.id = key;
+					b.innerHTML = '<img alt="" /><span></span>';
+					b.querySelector('span').textContent = c.name + ' Lv.' + c.lv;
+					setImg(b.querySelector('img'), c.face || c.portrait, c.fallback);
+					b.addEventListener('click', function () { show(key, true); });
+					tabs.appendChild(b);
+				});
+
+				function slotBtn(item, i) {
+					var b = document.createElement('button');
+					b.type = 'button';
+					b.className = 'slot';
+					b.dataset.rare = item.rare;
+					b.dataset.i = i;
+					b.title = item.name;
+					if (item.img) b.innerHTML = '<img alt="" src="' + item.img + '" />';
+					else b.textContent = item.icon;
+					var s = document.createElement('small');
+					s.textContent = item.slot;
+					b.appendChild(s);
+					b.addEventListener('click', function () { tip(i, true); });
+					return b;
+				}
+
+				function tip(i, clicked) {
+					var item = CHARS[current].items[i];
+					document.querySelectorAll('.slot').forEach(function (s) {
+						s.classList.toggle('is-on', +s.dataset.i === i);
+					});
+					var label = { legend: '전설', epic: '영웅', rare: '희귀', normal: '일반' }[item.rare];
+					var t = $('tip');
+					t.innerHTML = '<h3></h3><p class="meta"></p><ul></ul><p class="fx"></p><p class="desc"></p><p class="from"></p>';
+					var h = t.querySelector('h3');
+					h.textContent = item.name;
+					h.className = 'r-' + item.rare;
+					t.querySelector('.meta').textContent = label + ' · ' + item.type;
+					item.opts.forEach(function (o) {
+						var li = document.createElement('li');
+						li.textContent = o;
+						t.querySelector('ul').appendChild(li);
+					});
+					t.querySelector('.fx').textContent = item.fx || '';
+					t.querySelector('.desc').textContent = item.desc;
+					t.querySelector('.from').textContent = item.from ? '♥ ' + item.from : '';
+					// 전설 지팡이는 꽃잎 효과
+					if (clicked && item.name === '성녀의 눈물') petals();
+				}
+
+				function show(key, push) {
+					current = key;
+					var c = CHARS[key];
+					document.body.dataset.char = key;
+					tabs.querySelectorAll('button').forEach(function (b) {
+						b.classList.toggle('is-on', b.dataset.id === key);
+					});
+					if (push) history.replaceState(null, '', '?id=' + key);
+					document.title = c.name + ' · 캐릭터 정보';
+
+					setImg($('portrait'), c.portrait, c.fallback);
+					$('portrait').alt = c.name;
+					$('lv').textContent = 'Lv.' + c.lv;
+					$('guild').textContent = c.guild;
+					$('name').textContent = c.name;
+					$('cls').textContent = c.cls;
+					$('status').textContent = '● ' + c.status;
+					$('hpTxt').textContent = c.hp[0].toLocaleString() + '/' + c.hp[1].toLocaleString();
+					$('mpTxt').textContent = c.mp[0].toLocaleString() + '/' + c.mp[1].toLocaleString();
+					$('xpTxt').textContent = c.xp + '%';
+					$('hpBar').style.setProperty('--v', (c.hp[0] / c.hp[1]) * 100 + '%');
+					$('mpBar').style.setProperty('--v', (c.mp[0] / c.mp[1]) * 100 + '%');
+					$('xpBar').style.setProperty('--v', c.xp + '%');
+
+					var L = $('colL'), R = $('colR');
+					L.innerHTML = '';
+					R.innerHTML = '';
+					c.items.forEach(function (it, i) {
+						(i < 3 ? L : R).appendChild(slotBtn(it, i));
+					});
+
+					var st = $('stats');
+					st.innerHTML = '';
+					c.stats.forEach(function (s) {
+						var d = document.createElement('div');
+						d.innerHTML = '<dt></dt><span class="gauge"><i></i></span><dd></dd>';
+						d.querySelector('dt').textContent = s[0];
+						d.querySelector('dd').textContent = s[1].toLocaleString();
+						d.querySelector('i').style.setProperty('--v', Math.min(100, (s[1] / s[2]) * 100) + '%');
+						st.appendChild(d);
+					});
+
+					var pf = $('prof');
+					pf.innerHTML = '';
+					c.prof.forEach(function (p) {
+						var dt = document.createElement('dt');
+						var dd = document.createElement('dd');
+						dt.textContent = p[0];
+						dd.textContent = p[1];
+						pf.appendChild(dt);
+						pf.appendChild(dd);
+					});
+					$('memo').innerHTML = '<b></b><span></span>';
+					$('memo').querySelector('b').textContent = c.memo[0];
+					$('memo').querySelector('span').textContent = c.memo[1];
+
+					// 기본 선택: 무기 칸
+					var wi = c.items.findIndex(function (it) { return it.slot === '무기'; });
+					tip(wi < 0 ? 0 : wi);
+				}
+
+				// 하위 탭
+				document.querySelector('.sub-tabs').addEventListener('click', function (e) {
+					var b = e.target.closest('button');
+					if (!b) return;
+					document.querySelectorAll('.sub-tabs button').forEach(function (x) { x.classList.toggle('is-on', x === b); });
+					document.querySelectorAll('.pane').forEach(function (p) { p.hidden = p.dataset.pane !== b.dataset.pane; });
+				});
+
+				// 효과
+				var layer = document.querySelector('.fx-layer');
+				function spawn(make, n) {
+					for (var i = 0; i < n; i++) {
+						var el = make();
+						el.style.left = Math.random() * 100 + '%';
+						el.style.animationDelay = Math.random() * 0.7 + 's';
+						el.style.setProperty('--dx', (Math.random() * 120 - 60).toFixed(0) + 'px');
+						layer.appendChild(el);
+						setTimeout(el.remove.bind(el), 4200);
+					}
+				}
+				function petals() {
+					spawn(function () { var s = document.createElement('span'); s.className = 'fx-petal'; return s; }, 18);
+				}
+				$('btnHeart').addEventListener('click', function () {
+					spawn(function () { var s = document.createElement('span'); s.className = 'fx-heart'; s.textContent = '♥'; return s; }, 12);
+				});
+
+				show(current, false);
+			})();
+		</script>
+		<script src="assets/keys.js"></script>
+	</body>
+</html>

@@ -1,0 +1,1692 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<meta name="robots" content="noindex" />
+		<base href="/game/" />
+		<title>블러드로드 온라인</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cinzel+Decorative:wght@700&family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&display=swap" />
+		<link rel="stylesheet" href="assets/game.css" />
+		<style>
+			html,
+			body {
+				height: 100%;
+				overflow: hidden;
+			}
+
+			/* =================== 타이틀 =================== */
+			.title {
+				position: fixed;
+				inset: 0;
+				z-index: 40;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 22px;
+				padding: 24px;
+				text-align: center;
+				background:
+					radial-gradient(ellipse 60% 45% at 50% 42%, rgba(163, 36, 58, 0.45), transparent 70%),
+					radial-gradient(ellipse 100% 60% at 50% 110%, #2a0f18, transparent 70%),
+					#07060a;
+				transition: opacity 0.7s, visibility 0.7s;
+			}
+			.title.is-gone {
+				opacity: 0;
+				visibility: hidden;
+			}
+			/* 타이틀 배경: img/main.webp */
+			.title .bg {
+				position: absolute;
+				inset: 0;
+				z-index: -1;
+			}
+			.title .bg img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				opacity: 0.6;
+			}
+			.title .bg::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(180deg, rgba(7, 6, 10, 0.2), rgba(7, 6, 10, 0.85));
+			}
+			.embers i {
+				position: absolute;
+				bottom: -10px;
+				width: 3px;
+				height: 3px;
+				border-radius: 50%;
+				background: #ff7a5a;
+				box-shadow: 0 0 6px #ff7a5a;
+				animation: ember linear infinite;
+			}
+			@keyframes ember {
+				to {
+					transform: translate(var(--dx), -105vh);
+					opacity: 0;
+				}
+			}
+			/* 로고 이미지: img/logo-big.webp */
+			.logo {
+				margin: -6px 0 -4px;
+				line-height: 0;
+			}
+			.logo img {
+				width: min(620px, 88vw);
+				height: auto;
+				filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 30px rgba(163, 36, 58, 0.35));
+				animation: logoIn 1.2s ease-out both;
+			}
+			@keyframes logoIn {
+				from {
+					opacity: 0;
+					transform: scale(0.94);
+				}
+			}
+			@media (max-height: 500px) {
+				.title {
+					gap: 10px;
+				}
+				.logo img {
+					width: min(380px, 60vw);
+				}
+			}
+			.anniv {
+				font-family: var(--f-head);
+				font-size: 11px;
+				letter-spacing: 0.3em;
+				color: #e2788d;
+			}
+			.title-menu {
+				display: grid;
+				gap: 10px;
+				width: min(280px, 100%);
+			}
+			.title-menu .start {
+				min-height: 48px;
+				font-size: 16px;
+				font-family: var(--f-story);
+				letter-spacing: 0.2em;
+				animation: pulse 2s ease-in-out infinite;
+			}
+			@keyframes pulse {
+				50% {
+					box-shadow: 0 0 22px rgba(244, 223, 164, 0.5), inset 0 1px 0 rgba(255, 230, 170, 0.15);
+				}
+			}
+			.title-menu .row {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 8px;
+			}
+			.server {
+				font-size: 12px;
+				color: var(--dim);
+			}
+			.server b {
+				color: var(--ch-guild);
+				font-weight: 400;
+			}
+			.title .foot {
+				position: absolute;
+				bottom: 14px;
+				left: 0;
+				right: 0;
+				font-size: 10.5px;
+				color: var(--mute);
+			}
+
+			/* =================== 로딩 =================== */
+			.loading {
+				position: fixed;
+				inset: 0;
+				z-index: 45;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: flex-end;
+				padding: 24px 24px calc(28px + env(safe-area-inset-bottom, 0px));
+				background: radial-gradient(ellipse 80% 60% at 50% 40%, #1d1020, #07060a 75%);
+				overflow: hidden;
+				cursor: pointer;
+				transition: opacity 0.6s, visibility 0.6s;
+			}
+			.loading[hidden] {
+				display: none;
+			}
+			.loading.is-done {
+				opacity: 0;
+				visibility: hidden;
+			}
+			/* 양옆 캐릭터 */
+			.loading .art {
+				position: absolute;
+				bottom: 0;
+				height: 92%;
+				width: auto;
+				max-width: none;
+				opacity: 0;
+				filter: drop-shadow(0 0 40px rgba(0, 0, 0, 0.9));
+				pointer-events: none;
+			}
+			.loading .art.l {
+				left: 50%;
+				transform: translateX(-112%);
+				animation: artInL 1.4s 0.1s ease-out forwards;
+			}
+			.loading .art.r {
+				left: 50%;
+				transform: translateX(12%);
+				animation: artInR 1.4s 0.25s ease-out forwards;
+			}
+			@keyframes artInL {
+				from {
+					opacity: 0;
+					transform: translateX(-125%);
+				}
+				to {
+					opacity: 0.55;
+					transform: translateX(-112%);
+				}
+			}
+			@keyframes artInR {
+				from {
+					opacity: 0;
+					transform: translateX(25%);
+				}
+				to {
+					opacity: 0.55;
+					transform: translateX(12%);
+				}
+			}
+			.loading::after {
+				/* 아래쪽 어둡게 */
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(180deg, rgba(7, 6, 10, 0) 35%, rgba(7, 6, 10, 0.92) 78%);
+				pointer-events: none;
+			}
+			.loading .inner {
+				position: relative;
+				z-index: 1;
+				width: min(640px, 100%);
+				display: grid;
+				gap: 14px;
+			}
+			.loading .lg {
+				justify-self: center;
+				width: min(240px, 50vw);
+				margin-bottom: 6px;
+				opacity: 0;
+				animation: fadeUp 0.8s 0.5s ease-out forwards;
+			}
+			@keyframes fadeUp {
+				from {
+					opacity: 0;
+					transform: translateY(10px);
+				}
+				to {
+					opacity: 1;
+					transform: none;
+				}
+			}
+
+			/* 상태 문구: 한 글자씩 */
+			.load-msg {
+				min-height: 1.6em;
+				text-align: center;
+				font-family: var(--f-story);
+				font-size: clamp(16px, 3.6vw, 20px);
+				font-weight: 700;
+				color: var(--gold-hi);
+				letter-spacing: 0.08em;
+				text-shadow: 0 0 12px rgba(217, 181, 107, 0.45), 0 2px 4px #000;
+				white-space: nowrap;
+			}
+			.load-msg span {
+				display: inline-block;
+				opacity: 0;
+				transform: translateY(12px) scale(0.8);
+				filter: blur(4px);
+				animation: charIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1.2) forwards;
+				animation-delay: calc(var(--i) * 45ms);
+			}
+			@keyframes charIn {
+				to {
+					opacity: 1;
+					transform: none;
+					filter: none;
+				}
+			}
+			/* 다 나온 뒤 말줄임표만 물결 */
+			.load-msg span.dot {
+				animation:
+					charIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1.2) forwards,
+					wave 1.1s ease-in-out infinite;
+				animation-delay: calc(var(--i) * 45ms), calc(var(--i) * 45ms + 0.5s + var(--d) * 0.15s);
+			}
+			@keyframes wave {
+				50% {
+					transform: translateY(-6px);
+				}
+			}
+			.load-msg span.out {
+				animation: charOut 0.25s ease-in forwards;
+				animation-delay: calc(var(--i) * 18ms);
+			}
+			@keyframes charOut {
+				from {
+					opacity: 1;
+					transform: none;
+				}
+				to {
+					opacity: 0;
+					transform: translateY(-10px);
+					filter: blur(3px);
+				}
+			}
+
+			/* 진행 바 */
+			.load-bar {
+				position: relative;
+				height: 8px;
+				background: rgba(0, 0, 0, 0.7);
+				border: 1px solid var(--frame);
+				box-shadow: 0 0 0 1px #000;
+			}
+			.load-bar i {
+				position: absolute;
+				inset: 0 auto 0 0;
+				width: 0;
+				background: linear-gradient(90deg, #6b1020, var(--crimson) 60%, #ff8fa6);
+				box-shadow: 0 0 12px rgba(255, 111, 140, 0.6);
+				transition: width 0.25s linear;
+			}
+			.load-bar i::after {
+				/* 반짝이는 끝부분 */
+				content: '';
+				position: absolute;
+				right: -6px;
+				top: 50%;
+				width: 14px;
+				height: 14px;
+				transform: translateY(-50%) rotate(45deg);
+				background: #fff3f6;
+				box-shadow: 0 0 14px 4px rgba(255, 143, 166, 0.9);
+			}
+			.load-meta {
+				display: flex;
+				justify-content: space-between;
+				font-size: 11.5px;
+				color: var(--dim);
+				font-variant-numeric: tabular-nums;
+			}
+			.load-meta b {
+				color: var(--gold-hi);
+				font-weight: 400;
+			}
+
+			/* 팁: 타자 치듯 */
+			.load-tip {
+				min-height: 3.2em;
+				padding: 10px 14px;
+				background: rgba(0, 0, 0, 0.55);
+				border: 1px solid rgba(110, 86, 49, 0.6);
+				font-size: 13px;
+				line-height: 1.6;
+				color: var(--text);
+			}
+			.load-tip em {
+				font-style: normal;
+				font-family: var(--f-head);
+				font-size: 11px;
+				letter-spacing: 0.15em;
+				color: var(--rose);
+				margin-right: 8px;
+			}
+			.load-tip .caret {
+				display: inline-block;
+				width: 2px;
+				height: 1em;
+				margin-left: 2px;
+				vertical-align: -2px;
+				background: var(--gold-hi);
+				animation: blink 0.8s steps(1) infinite;
+			}
+			@keyframes blink {
+				50% {
+					opacity: 0;
+				}
+			}
+			.load-skip {
+				text-align: center;
+				font-size: 11px;
+				color: var(--mute);
+			}
+
+			@media (max-width: 640px) {
+				.loading .art {
+					height: 70%;
+					bottom: 18%;
+				}
+				.loading .art.l {
+					transform: translateX(-90%);
+				}
+				.loading .art.r {
+					transform: translateX(-10%);
+				}
+				@keyframes artInL {
+					from {
+						opacity: 0;
+						transform: translateX(-105%);
+					}
+					to {
+						opacity: 0.5;
+						transform: translateX(-90%);
+					}
+				}
+				@keyframes artInR {
+					from {
+						opacity: 0;
+						transform: translateX(5%);
+					}
+					to {
+						opacity: 0.5;
+						transform: translateX(-10%);
+					}
+				}
+			}
+			@media (max-height: 500px) {
+				.loading {
+					padding-bottom: 14px;
+				}
+				.loading .inner {
+					gap: 8px;
+				}
+				.loading .lg {
+					width: 150px;
+					margin: 0;
+				}
+				.load-tip {
+					min-height: 0;
+					padding: 6px 12px;
+					font-size: 12px;
+				}
+			}
+
+			/* =================== 광장(월드) =================== */
+			.world {
+				position: fixed;
+				inset: 0;
+				overflow: hidden;
+				cursor: crosshair;
+				background: #0c0a10;
+				touch-action: manipulation;
+			}
+			/* 배경: img/plaza.webp 를 넣으면 이 그림 대신 깔립니다 */
+			.ground {
+				position: absolute;
+				inset: 0;
+				background:
+					radial-gradient(ellipse 50% 22% at 50% 52%, rgba(120, 170, 220, 0.18), transparent 70%),
+					radial-gradient(ellipse 90% 60% at 50% 60%, #3a3140 0%, #1b1622 55%, #0c0a10 100%);
+			}
+			.ground::before {
+				/* 바닥 돌 타일 */
+				content: '';
+				position: absolute;
+				left: -50%;
+				right: -50%;
+				top: 34%;
+				bottom: -40%;
+				background:
+					repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0 2px, transparent 2px 70px),
+					repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.35) 0 2px, transparent 2px 70px);
+				transform: perspective(600px) rotateX(58deg);
+				transform-origin: top;
+				opacity: 0.55;
+			}
+			.ground::after {
+				/* 하늘/성벽 */
+				content: '';
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				height: 34%;
+				background:
+					linear-gradient(180deg, transparent 70%, rgba(0, 0, 0, 0.6)),
+					repeating-linear-gradient(90deg, #17121d 0 46px, #120e17 46px 60px),
+					linear-gradient(180deg, #1c1630, #120e1a);
+				-webkit-mask: linear-gradient(180deg, #000 0 74%, transparent);
+				mask: linear-gradient(180deg, #000 0 74%, transparent);
+			}
+			.ground img {
+				position: absolute;
+				inset: 0;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				z-index: 1;
+			}
+			.fountain {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				width: 220px;
+				height: 80px;
+				transform: translate(-50%, -50%);
+				border-radius: 50%;
+				background: radial-gradient(ellipse, #6fa7d8 0%, #2e5679 55%, #4b4250 57%, #2b2430 72%, transparent 73%);
+				box-shadow: 0 0 40px rgba(111, 167, 216, 0.25);
+				pointer-events: none;
+			}
+			.fountain::after {
+				content: '';
+				position: absolute;
+				left: 50%;
+				bottom: 40%;
+				width: 10px;
+				height: 60px;
+				transform: translateX(-50%);
+				background: linear-gradient(180deg, rgba(200, 230, 255, 0.9), rgba(111, 167, 216, 0));
+				border-radius: 6px;
+				animation: spout 1.4s ease-in-out infinite;
+			}
+			@keyframes spout {
+				50% {
+					height: 72px;
+					opacity: 0.7;
+				}
+			}
+			.lamp {
+				position: absolute;
+				top: 30%;
+				width: 6px;
+				height: 70px;
+				background: #2a2330;
+				pointer-events: none;
+			}
+			.lamp::before {
+				content: '';
+				position: absolute;
+				left: 50%;
+				top: -10px;
+				width: 14px;
+				height: 14px;
+				transform: translateX(-50%);
+				border-radius: 50%;
+				background: #ffcf7a;
+				box-shadow: 0 0 30px 10px rgba(255, 190, 90, 0.35);
+				animation: flicker 3s infinite;
+			}
+			@keyframes flicker {
+				40% {
+					opacity: 0.8;
+				}
+				45% {
+					opacity: 1;
+				}
+			}
+			.has-bg .fountain,
+			.has-bg .lamp {
+				display: none;
+			}
+
+			/* 캐릭터 */
+			.unit {
+				position: absolute;
+				left: 0;
+				top: 0;
+				z-index: 5;
+				width: 110px;
+				transform: translate(-50%, -100%);
+				transition:
+					left var(--t, 0.8s) linear,
+					top var(--t, 0.8s) linear;
+				cursor: pointer;
+				-webkit-user-select: none;
+				user-select: none;
+			}
+			/* 전신 이미지 (투명 배경): img/ruby.webp, img/wooyo.webp */
+			.unit .body {
+				position: relative;
+				width: 110px;
+				height: 147px;
+			}
+			.unit .body img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+				object-position: 50% 100%;
+				filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.7));
+			}
+			.unit:hover .body img {
+				filter: drop-shadow(0 0 6px rgba(244, 223, 164, 0.9)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.7));
+			}
+			.unit.is-walking .body {
+				animation: bob 0.35s ease-in-out infinite;
+			}
+			@keyframes bob {
+				50% {
+					transform: translateY(-3px);
+				}
+			}
+			.unit.face-left .body {
+				transform: scaleX(-1);
+			}
+			.unit::after {
+				content: '';
+				position: absolute;
+				left: 50%;
+				bottom: -6px;
+				width: 50px;
+				height: 12px;
+				transform: translateX(-50%);
+				border-radius: 50%;
+				background: rgba(0, 0, 0, 0.5);
+				z-index: -1;
+			}
+			.unit .plate {
+				position: absolute;
+				left: 50%;
+				bottom: calc(100% + 6px);
+				transform: translateX(-50%);
+				text-align: center;
+				white-space: nowrap;
+				font-size: 12px;
+				font-weight: 700;
+				text-shadow: 0 1px 0 #000, 0 0 3px #000, 0 0 3px #000;
+				line-height: 1.25;
+			}
+			.unit .plate small {
+				display: block;
+				font-size: 10px;
+				font-weight: 400;
+				color: var(--ch-guild);
+			}
+			#ruby .plate {
+				color: #ffd0e2;
+			}
+			#wooyo .plate {
+				color: #ffe9b5;
+			}
+			#wooyo .body {
+				width: 124px;
+				height: 165px;
+				margin-left: -7px;
+			}
+			.bubble {
+				position: absolute;
+				left: 50%;
+				bottom: calc(100% + 40px);
+				transform: translateX(-50%);
+				max-width: 180px;
+				padding: 5px 10px;
+				background: rgba(255, 255, 255, 0.95);
+				color: #222;
+				font-size: 12px;
+				border-radius: 10px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+				animation: pop 0.2s ease-out;
+				pointer-events: none;
+			}
+			@keyframes pop {
+				from {
+					transform: translateX(-50%) scale(0.6);
+					opacity: 0;
+				}
+			}
+			.click-mark {
+				position: absolute;
+				z-index: 4;
+				width: 30px;
+				height: 14px;
+				margin: -7px 0 0 -15px;
+				border: 2px solid var(--gold-hi);
+				border-radius: 50%;
+				pointer-events: none;
+				animation: mark 0.6s ease-out forwards;
+			}
+			@keyframes mark {
+				to {
+					transform: scale(1.8);
+					opacity: 0;
+				}
+			}
+
+			/* 우클릭(탭) 메뉴 */
+			.ctx {
+				position: absolute;
+				z-index: 30;
+				min-width: 140px;
+				padding: 4px 0;
+			}
+			.ctx[hidden] {
+				display: none;
+			}
+			.ctx .panel-title {
+				padding: 6px 12px;
+				font-family: var(--f-ui);
+				font-size: 12px;
+			}
+			.ctx button,
+			.ctx a {
+				display: block;
+				width: 100%;
+				padding: 7px 14px;
+				background: none;
+				border: 0;
+				text-align: left;
+				font-size: 13px;
+				text-decoration: none;
+				cursor: pointer;
+			}
+			.ctx button:hover,
+			.ctx a:hover {
+				background: rgba(217, 181, 107, 0.15);
+				color: var(--gold-hi);
+			}
+
+			/* =================== HUD =================== */
+			.hud {
+				position: absolute;
+				z-index: 20;
+				cursor: default;
+			}
+			.me {
+				left: 12px;
+				top: 12px;
+				display: flex;
+				gap: 10px;
+				padding: 8px 12px 8px 8px;
+				width: 260px;
+			}
+			.me .face {
+				width: 52px;
+				height: 52px;
+				flex: none;
+				border: 1px solid var(--frame-hi);
+			}
+			.me .face img {
+				object-position: 50% 50%;
+			}
+			.me .info {
+				flex: 1;
+				min-width: 0;
+				display: grid;
+				gap: 4px;
+				align-content: center;
+			}
+			.me .nm {
+				font-size: 13px;
+				font-weight: 700;
+				color: #ffd0e2;
+			}
+			.me .nm em {
+				font-style: normal;
+				font-weight: 400;
+				color: var(--gold);
+				font-size: 11px;
+				margin-right: 4px;
+			}
+			.mini {
+				right: 12px;
+				top: 12px;
+				width: 168px;
+				padding-bottom: 8px;
+				text-align: center;
+			}
+			.mini .map {
+				position: relative;
+				width: 120px;
+				height: 120px;
+				margin: 8px auto 6px;
+				border-radius: 50%;
+				border: 2px solid var(--frame-hi);
+				background:
+					radial-gradient(circle at 50% 50%, rgba(111, 167, 216, 0.6) 0 10%, transparent 11%),
+					repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 12px),
+					repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 12px),
+					#1a1520;
+				overflow: hidden;
+			}
+			.mini .dot {
+				position: absolute;
+				width: 8px;
+				height: 8px;
+				margin: -4px 0 0 -4px;
+				border-radius: 50%;
+				transition: left 0.3s linear, top 0.3s linear;
+			}
+			.mini .dot.r {
+				background: var(--rose);
+				box-shadow: 0 0 6px var(--rose);
+			}
+			.mini .dot.w {
+				background: var(--gold-hi);
+			}
+			.mini .loc {
+				font-size: 12px;
+				color: var(--gold-hi);
+			}
+			.mini .clock {
+				font-size: 11px;
+				color: var(--dim);
+				font-variant-numeric: tabular-nums;
+			}
+
+			.chatbox {
+				left: 12px;
+				bottom: 12px;
+				width: min(420px, calc(100% - 24px));
+				display: flex;
+				flex-direction: column;
+				background: rgba(10, 8, 14, 0.72);
+			}
+			.chatbox .log {
+				height: 170px;
+				overflow-y: auto;
+				padding: 6px 10px;
+				font-size: 13px;
+				line-height: 1.6;
+				text-shadow: 0 1px 0 #000, 0 0 3px #000;
+				scrollbar-width: thin;
+				scrollbar-color: var(--frame) transparent;
+			}
+			.chatbox .log div {
+				overflow-wrap: anywhere;
+			}
+			.chatbox .log b {
+				font-weight: 700;
+			}
+			.chatbox form {
+				display: flex;
+				gap: 6px;
+				padding: 6px 8px 8px;
+			}
+			.chatbox select,
+			.chatbox input {
+				min-width: 0;
+				height: 32px;
+				background: rgba(0, 0, 0, 0.6);
+				border: 1px solid rgba(110, 86, 49, 0.7);
+				color: var(--text);
+				font: inherit;
+				font-size: 13px;
+				padding: 0 8px;
+				border-radius: 2px;
+			}
+			.chatbox input {
+				flex: 1;
+			}
+			.chatbox input:focus {
+				outline: 1px solid var(--gold);
+			}
+			.c-say {
+				color: var(--ch-say);
+			}
+			.c-guild {
+				color: var(--ch-guild);
+			}
+			.c-whisper {
+				color: var(--ch-whisper);
+			}
+			.c-system {
+				color: var(--ch-system);
+			}
+			.c-party {
+				color: var(--ch-party);
+			}
+
+			.menu {
+				right: 12px;
+				bottom: 12px;
+				display: grid;
+				grid-template-columns: repeat(2, auto);
+				gap: 6px;
+				padding: 10px;
+			}
+			.skills {
+				left: 50%;
+				bottom: 12px;
+				transform: translateX(-50%);
+				display: flex;
+				gap: 6px;
+				padding: 8px;
+			}
+			.skill {
+				position: relative;
+				width: 48px;
+				height: 48px;
+				display: grid;
+				place-items: center;
+				font-size: 22px;
+				background: radial-gradient(circle at 50% 35%, #3b2a3a, #120d15);
+				border: 1px solid var(--frame-hi);
+				cursor: pointer;
+				overflow: hidden;
+				padding: 0;
+			}
+			.skill kbd {
+				position: absolute;
+				left: 3px;
+				top: 1px;
+				font-family: var(--f-ui);
+				font-size: 10px;
+				color: var(--dim);
+			}
+			.skill::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: rgba(0, 0, 0, 0.7);
+				transform-origin: bottom;
+				transform: scaleY(0);
+			}
+			.skill.is-cd::after {
+				animation: cd var(--cd, 2s) linear forwards;
+			}
+			@keyframes cd {
+				from {
+					transform: scaleY(1);
+				}
+				to {
+					transform: scaleY(0);
+				}
+			}
+
+			.toast {
+				position: absolute;
+				left: 50%;
+				top: 22%;
+				z-index: 25;
+				transform: translateX(-50%);
+				padding: 6px 18px;
+				font-family: var(--f-story);
+				font-size: 15px;
+				color: var(--gold-hi);
+				text-shadow: 0 2px 6px #000;
+				background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.7), transparent);
+				white-space: nowrap;
+				pointer-events: none;
+				animation: toast 2.6s ease forwards;
+			}
+			@keyframes toast {
+				0% {
+					opacity: 0;
+					transform: translate(-50%, 8px);
+				}
+				15%,
+				75% {
+					opacity: 1;
+					transform: translate(-50%, 0);
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+
+			/* 태블릿: 스킬바를 메뉴 위 오른쪽으로 */
+			@media (max-width: 1100px) {
+				.skills {
+					left: auto;
+					right: 12px;
+					transform: none;
+					bottom: 116px;
+				}
+			}
+			@media (max-width: 640px) {
+				.skills {
+					display: none;
+				}
+			}
+			/* 가로로 눕힌 휴대폰 (높이가 낮은 화면) */
+			@media (max-height: 500px) and (min-width: 641px) {
+				.me {
+					width: 220px;
+					padding: 5px 10px 5px 5px;
+				}
+				.me .face {
+					width: 38px;
+					height: 38px;
+				}
+				.mini {
+					width: 110px;
+				}
+				.mini .panel-title {
+					display: none;
+				}
+				.mini .map {
+					width: 64px;
+					height: 64px;
+					margin-top: 6px;
+				}
+				.mini .loc {
+					font-size: 11px;
+				}
+				.mini .clock {
+					display: none;
+				}
+				.chatbox {
+					width: 300px;
+					bottom: 8px;
+					left: 8px;
+				}
+				.chatbox .log {
+					height: 64px;
+					font-size: 12px;
+					line-height: 1.5;
+				}
+				.chatbox form {
+					padding: 4px 6px 6px;
+				}
+				.chatbox select,
+				.chatbox input {
+					height: 28px;
+					font-size: 12px;
+				}
+				.chatbox select {
+					width: 64px;
+				}
+				.menu {
+					right: 8px;
+					bottom: 8px;
+					grid-template-columns: repeat(4, auto);
+					padding: 6px;
+				}
+				.menu .g-btn {
+					min-height: 28px;
+					padding: 3px 8px;
+					font-size: 12px;
+				}
+				.menu .g-btn kbd {
+					display: none;
+				}
+				.skills {
+					right: 8px;
+					bottom: 54px;
+					padding: 5px;
+					gap: 4px;
+				}
+				.skill {
+					width: 38px;
+					height: 38px;
+					font-size: 18px;
+				}
+				.unit {
+					width: 66px;
+				}
+				.unit .body {
+					width: 66px;
+					height: 88px;
+				}
+				#wooyo .body {
+					width: 74px;
+					height: 99px;
+					margin-left: -4px;
+				}
+				.toast {
+					top: 14%;
+				}
+			}
+			@media (max-width: 640px) {
+				.unit {
+					width: 84px;
+				}
+				.unit .body {
+					width: 84px;
+					height: 112px;
+				}
+				#wooyo .body {
+					width: 94px;
+					height: 125px;
+					margin-left: -5px;
+				}
+			}
+			@media (max-width: 640px) {
+				.me {
+					width: auto;
+					max-width: calc(100% - 120px);
+					padding: 6px 10px 6px 6px;
+				}
+				.me .face {
+					width: 40px;
+					height: 40px;
+				}
+				.mini {
+					width: 92px;
+				}
+				.mini .panel-title {
+					display: none;
+				}
+				.mini .map {
+					width: 70px;
+					height: 70px;
+					margin-top: 8px;
+				}
+				.mini .loc {
+					font-size: 10.5px;
+					line-height: 1.3;
+					padding: 0 4px;
+				}
+				.chatbox {
+					left: 8px;
+					right: 8px;
+					width: auto;
+					bottom: 8px;
+				}
+				.chatbox .log {
+					height: 118px;
+					font-size: 12.5px;
+				}
+				.chatbox select {
+					width: 64px;
+				}
+				.menu {
+					left: 8px;
+					right: 8px;
+					/* 채팅창 바로 위 */
+					bottom: 180px;
+					display: flex;
+					justify-content: space-between;
+					padding: 6px;
+				}
+				.menu .g-btn {
+					flex: 1;
+					padding: 4px 6px;
+					font-size: 12px;
+				}
+				.menu .g-btn kbd {
+					display: none;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- =================== 타이틀 =================== -->
+		<section class="title" id="title">
+			<!-- 타이틀 배경 이미지: img/main.webp -->
+			<div class="bg"><img src="img/main.webp" alt="" onerror="this.remove()" /></div>
+			<div class="embers" id="embers" aria-hidden="true"></div>
+
+			<div class="anniv">SERVICE 14TH YEAR</div>
+			<h1 class="logo"><img src="img/logo-big.webp" alt="BLOODROAD 블러드로드 온라인" /></h1>
+
+			<div class="title-menu">
+				<button class="g-btn start" type="button" id="btnStart">게임 시작</button>
+				<div class="row">
+					<a class="g-btn" href="character.html">캐릭터 정보</a>
+					<a class="g-btn" href="log.html">채팅 기록</a>
+				</div>
+			</div>
+			<div class="server">서버 <b>● 통합 1서버</b> · 혼잡</div>
+			<div class="foot">이 화면은 소설 속 가상의 게임입니다.</div>
+		</section>
+
+		<!-- =================== 로딩 (게임 시작 → 광장 사이) =================== -->
+		<section class="loading" id="loading" hidden aria-live="polite">
+			<img class="art l" src="img/ruby.webp" alt="" onerror="this.remove()" />
+			<img class="art r" src="img/wooyo.webp" alt="" onerror="this.remove()" />
+			<div class="inner">
+				<img class="lg" src="img/logo-sm.webp" alt="BLOODROAD" />
+				<div class="load-msg" id="loadMsg"></div>
+				<div class="load-bar"><i id="loadBar"></i></div>
+				<div class="load-meta"><span id="loadStep">통합 1서버</span><b id="loadPct">0%</b></div>
+				<div class="load-tip"><em>TIP</em><span id="loadTip"></span><span class="caret"></span></div>
+				<div class="load-skip">화면을 누르면 빨리 넘어갑니다</div>
+			</div>
+		</section>
+
+		<!-- =================== 광장 =================== -->
+		<main class="world" id="world" aria-label="흑기사단 길드 광장. 바닥을 누르면 루비짱이 이동합니다.">
+			<div class="ground" id="ground">
+				<!-- 광장 배경 이미지: img/plaza.webp -->
+				<img src="img/plaza.webp" alt="" onerror="this.remove()" onload="document.getElementById('world').classList.add('has-bg')" />
+			</div>
+			<div class="fountain"></div>
+			<div class="lamp" style="left: 18%"></div>
+			<div class="lamp" style="left: 82%"></div>
+
+			<div class="unit" id="wooyo" data-name="킹우요">
+				<div class="plate"><small>&lt;흑기사단&gt;</small>킹우요</div>
+				<div class="body"><img alt="킹우요" data-src="img/wooyo.webp" data-fallback="assets/ph-wooyo.svg" /></div>
+			</div>
+			<div class="unit" id="ruby" data-name="루비짱">
+				<div class="plate"><small>&lt;흑기사단&gt;</small>루비짱</div>
+				<div class="body"><img alt="루비짱" data-src="img/ruby.webp" data-fallback="assets/ph-ruby.svg" /></div>
+			</div>
+
+			<!-- 캐릭터 메뉴 -->
+			<div class="ctx panel" id="ctx" hidden>
+				<div class="panel-title" id="ctxName"></div>
+				<div id="ctxBody"></div>
+			</div>
+
+			<!-- HUD: 내 상태 -->
+			<section class="hud panel me">
+				<div class="img-slot face"><img alt="" data-src="img/ruby-face.webp" data-fallback="assets/ph-ruby.svg" /></div>
+				<div class="info">
+					<div class="nm"><em>Lv.92</em>루비짱</div>
+					<div class="gauge hp"><i id="myHp"></i></div>
+					<div class="gauge mp"><i id="myMp"></i></div>
+				</div>
+			</section>
+
+			<!-- HUD: 미니맵 -->
+			<section class="hud panel mini">
+				<div class="panel-title">MAP</div>
+				<div class="map"><span class="dot w" id="dotW"></span><span class="dot r" id="dotR"></span></div>
+				<div class="loc">흑기사단 길드 광장</div>
+				<div class="clock" id="clock"></div>
+			</section>
+
+			<!-- HUD: 스킬 -->
+			<section class="hud panel skills" aria-label="스킬">
+				<button class="skill" type="button" data-skill="heal" title="장미빛 축복"><kbd>1</kbd>🌹</button>
+				<button class="skill" type="button" data-skill="shield" title="성역의 장막"><kbd>2</kbd>✨</button>
+				<button class="skill" type="button" data-skill="heart" title="하트"><kbd>3</kbd>♥</button>
+				<button class="skill" type="button" data-skill="flower" title="꽃 건네기"><kbd>4</kbd>🌷</button>
+			</section>
+
+			<!-- HUD: 메뉴 -->
+			<nav class="hud panel menu">
+				<a class="g-btn" href="character.html">캐릭터 <kbd>C</kbd></a>
+				<a class="g-btn" href="character.html?id=wooyo">탱커 정보</a>
+				<a class="g-btn" href="log.html">채팅 기록 <kbd>L</kbd></a>
+				<button class="g-btn" type="button" id="btnTitle">타이틀</button>
+			</nav>
+
+			<!-- HUD: 채팅 -->
+			<section class="hud panel chatbox">
+				<div class="log" id="log" aria-live="polite"></div>
+				<form id="chatForm" autocomplete="off">
+					<select id="chatCh" aria-label="채널">
+						<option value="say">일반</option>
+						<option value="guild">길드</option>
+						<option value="whisper">귓속말</option>
+					</select>
+					<input id="chatIn" maxlength="60" placeholder="Enter 로 채팅" aria-label="채팅 입력" />
+				</form>
+			</section>
+		</main>
+
+		<div class="fx-layer" aria-hidden="true"></div>
+
+		<script>
+			(function () {
+				'use strict';
+				var $ = function (id) { return document.getElementById(id); };
+				var world = $('world');
+
+				/* ---------- 이미지 슬롯: 파일 없으면 임시 그림으로 ---------- */
+				document.querySelectorAll('img[data-src]').forEach(function (img) {
+					img.onerror = function () { img.onerror = null; img.src = img.dataset.fallback; };
+					img.src = img.dataset.src;
+				});
+
+				/* ---------- 타이틀 ---------- */
+				var title = $('title');
+				var emb = $('embers');
+				for (var i = 0; i < 26; i++) {
+					var e = document.createElement('i');
+					e.style.left = Math.random() * 100 + '%';
+					e.style.animationDuration = 5 + Math.random() * 7 + 's';
+					e.style.animationDelay = -Math.random() * 10 + 's';
+					e.style.setProperty('--dx', Math.random() * 160 - 80 + 'px');
+					emb.appendChild(e);
+				}
+				function start() {
+					if (isLoading) return;
+					title.classList.add('is-gone');
+					try { sessionStorage.setItem('bl-started', '1'); } catch (err) {}
+					showLoading(function () {
+						toast('흑기사단 길드 광장');
+						runAmbient();
+					});
+				}
+
+				/* ---------- 로딩 화면 ---------- */
+				// 진행률이 이 숫자를 넘으면 문구가 바뀝니다
+				var LOAD_STEPS = [
+					[0, '서버에 접속하는 중...', '통합 1서버 · 혼잡'],
+					[28, '캐릭터 정보를 불러오는 중...', '루비짱 Lv.92'],
+					[58, '흑기사단 길드 정보를 확인하는 중...', '[흑기사단] 길드원 6명 접속 중'],
+					[86, '길드 광장으로 이동하는 중...', '흑기사단 길드 광장'],
+				];
+				var LOAD_TIPS = [
+					'탱커 뒤에 붙어 있으면 장판을 피하기 쉽습니다. 단, 탱커의 오더가 틀릴 때도 있습니다.',
+					'낙사 구간에서는 탱커도 죽습니다. 낙사는 부활도 되지 않습니다.',
+					'[하트] 모션은 잘못 눌러도 상대에게 그대로 보입니다.',
+					'보스 패턴은 매주 바뀔 수 있습니다. 출발 전에 공략 영상을 확인하세요.',
+					'[성녀의 눈물]은 이벤트 한정 아이템입니다. 거래 게시판에 거의 나오지 않습니다.',
+					'파티원이 위치를 물어보면, 편한 쪽을 솔직하게 말해 주세요.',
+				];
+				var isLoading = false;
+				var loadEl = $('loading');
+
+				// 문구를 한 글자씩 span 으로 쪼개서 등장 애니메이션
+				function setMsg(text) {
+					var box = $('loadMsg');
+					var old = box.querySelectorAll('span');
+					old.forEach(function (sp, i) {
+						sp.classList.add('out');
+						sp.style.setProperty('--i', i);
+					});
+					setTimeout(function () {
+						box.innerHTML = '';
+						var d = 0;
+						Array.from(text).forEach(function (ch, i) {
+							var sp = document.createElement('span');
+							sp.textContent = ch === ' ' ? '\u00a0' : ch;
+							sp.style.setProperty('--i', i);
+							if (ch === '.') {
+								sp.className = 'dot';
+								sp.style.setProperty('--d', d++);
+							}
+							box.appendChild(sp);
+						});
+					}, old.length ? 260 : 0);
+				}
+
+				// 팁: 타자 치듯
+				var tipTimer;
+				function typeTip(text) {
+					clearInterval(tipTimer);
+					var el = $('loadTip');
+					var chars = Array.from(text);
+					var n = 0;
+					el.textContent = '';
+					tipTimer = setInterval(function () {
+						el.textContent += chars[n++];
+						if (n >= chars.length) clearInterval(tipTimer);
+					}, 28);
+				}
+
+				function showLoading(done) {
+					isLoading = true;
+					loadEl.hidden = false;
+					loadEl.classList.remove('is-done');
+					// 캐릭터 등장 애니메이션 다시 재생
+					loadEl.querySelectorAll('.art, .lg').forEach(function (el) {
+						el.style.animation = 'none';
+						void el.offsetWidth;
+						el.style.animation = '';
+					});
+					typeTip(LOAD_TIPS[Math.floor(Math.random() * LOAD_TIPS.length)]);
+
+					var pct = 0, step = -1, fast = false;
+					function onTap() { fast = true; }
+					loadEl.addEventListener('click', onTap);
+
+					(function tickLoad() {
+						// 구간마다 속도를 달리해서 실제 로딩처럼
+						var inc = fast ? 6 : pct < 25 ? 2.2 : pct < 55 ? 1.1 : pct < 80 ? 1.8 : pct < 95 ? 0.8 : 1.6;
+						pct = Math.min(100, pct + inc * (0.6 + Math.random() * 0.8));
+						$('loadBar').style.width = pct + '%';
+						$('loadPct').textContent = Math.floor(pct) + '%';
+						for (var i = LOAD_STEPS.length - 1; i >= 0; i--) {
+							if (pct >= LOAD_STEPS[i][0]) {
+								if (i !== step) {
+									step = i;
+									setMsg(LOAD_STEPS[i][1]);
+									$('loadStep').textContent = LOAD_STEPS[i][2];
+								}
+								break;
+							}
+						}
+						if (pct < 100) return setTimeout(tickLoad, 45);
+
+						setMsg('접속 완료');
+						$('loadStep').textContent = '흑기사단 길드 광장';
+						clearInterval(tipTimer);
+						setTimeout(function () {
+							loadEl.classList.add('is-done');
+							loadEl.removeEventListener('click', onTap);
+							setTimeout(function () {
+								loadEl.hidden = true;
+								$('loadMsg').innerHTML = '';
+								$('loadBar').style.width = '0';
+								isLoading = false;
+								done();
+							}, 600);
+						}, fast ? 250 : 700);
+					})();
+				}
+				$('btnStart').addEventListener('click', start);
+				$('btnTitle').addEventListener('click', function () {
+					title.classList.remove('is-gone');
+					try { sessionStorage.removeItem('bl-started'); } catch (err) {}
+				});
+				// 다른 화면에서 돌아오면 타이틀 건너뛰기
+				var started = false;
+				try { started = sessionStorage.getItem('bl-started') === '1'; } catch (err) {}
+				if (started) {
+					title.style.transition = 'none';
+					title.classList.add('is-gone');
+					setTimeout(runAmbient, 300);
+				}
+
+				/* ---------- 이동 ---------- */
+				// 좌표는 화면 대비 % (x: 0~100, y: 0~100)
+				var units = {
+					ruby: { el: $('ruby'), x: 44, y: 70 },
+					wooyo: { el: $('wooyo'), x: 56, y: 66 },
+				};
+				var MIN_Y = 42, MAX_Y = 92;
+				// 모바일은 아래쪽에 채팅창/메뉴가 있으니 이동 범위를 줄임
+				function calcMaxY() {
+					var h = world.clientHeight || 1;
+					var reserved = window.innerWidth <= 640 ? 236 : window.innerHeight <= 500 ? 20 : 24;
+					MAX_Y = Math.max(MIN_Y + 10, ((h - reserved) / h) * 100);
+				}
+				calcMaxY();
+
+				function place(u, x, y, instant) {
+					x = Math.max(4, Math.min(96, x));
+					y = Math.max(MIN_Y, Math.min(MAX_Y, y));
+					var dx = (x - u.x) * world.clientWidth / 100;
+					var dy = (y - u.y) * world.clientHeight / 100;
+					var dist = Math.sqrt(dx * dx + dy * dy);
+					var t = instant ? 0 : Math.max(0.15, dist / 260);
+					u.el.style.setProperty('--t', t + 's');
+					if (Math.abs(dx) > 2) u.el.classList.toggle('face-left', dx < 0);
+					u.x = x;
+					u.y = y;
+					u.el.style.left = x + '%';
+					u.el.style.top = y + '%';
+					u.el.style.zIndex = 5 + Math.round(y);
+					if (t > 0) {
+						u.el.classList.add('is-walking');
+						clearTimeout(u.walk);
+						u.walk = setTimeout(function () { u.el.classList.remove('is-walking'); }, t * 1000);
+					}
+					updateMini();
+					return t;
+				}
+				place(units.ruby, units.ruby.x, units.ruby.y, true);
+				place(units.wooyo, units.wooyo.x, units.wooyo.y, true);
+
+				var followTimer;
+				function moveRuby(x, y) {
+					var t = place(units.ruby, x, y);
+					// 탱커는 힐러를 따라온다 (조금 늦게, 옆자리로)
+					clearTimeout(followTimer);
+					followTimer = setTimeout(function () {
+						var r = units.ruby, w = units.wooyo;
+						var side = r.x > 50 ? -9 : 9;
+						var gx = r.x + side, gy = r.y - 3;
+						var far = Math.abs(w.x - gx) + Math.abs(w.y - gy) > 6;
+						if (far) place(w, gx, gy);
+					}, 350 + t * 300);
+				}
+
+				world.addEventListener('click', function (e) {
+					if (e.target.closest('.hud, .ctx, .unit')) return;
+					closeCtx();
+					var rect = world.getBoundingClientRect();
+					var x = ((e.clientX - rect.left) / rect.width) * 100;
+					var y = ((e.clientY - rect.top) / rect.height) * 100;
+					if (y < MIN_Y - 6) return;
+					var m = document.createElement('span');
+					m.className = 'click-mark';
+					m.style.left = e.clientX - rect.left + 'px';
+					m.style.top = Math.max(e.clientY - rect.top, (MIN_Y / 100) * rect.height) + 'px';
+					world.appendChild(m);
+					setTimeout(m.remove.bind(m), 700);
+					moveRuby(x, y);
+				});
+
+				// 방향키 / WASD
+				var keyStep = { ArrowLeft: [-5, 0], ArrowRight: [5, 0], ArrowUp: [0, -5], ArrowDown: [0, 5], KeyA: [-5, 0], KeyD: [5, 0], KeyW: [0, -5], KeyS: [0, 5] };
+				document.addEventListener('keydown', function (e) {
+					if (/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+					if (isLoading) return;
+					if (!title.classList.contains('is-gone')) {
+						if (e.key === 'Enter') start();
+						return;
+					}
+					if (keyStep[e.code]) {
+						e.preventDefault();
+						moveRuby(units.ruby.x + keyStep[e.code][0], units.ruby.y + keyStep[e.code][1]);
+					}
+					if (e.key === 'Enter') { e.preventDefault(); $('chatIn').focus(); }
+					if (e.key >= '1' && e.key <= '4') {
+						var b = document.querySelectorAll('.skill')[+e.key - 1];
+						if (b) b.click();
+					}
+				});
+
+				/* ---------- 미니맵 / 시계 ---------- */
+				function updateMini() {
+					['ruby', 'wooyo'].forEach(function (k) {
+						var d = $(k === 'ruby' ? 'dotR' : 'dotW');
+						var u = units[k];
+						d.style.left = 15 + u.x * 0.7 + '%';
+						d.style.top = 15 + ((u.y - MIN_Y) / (MAX_Y - MIN_Y)) * 70 + '%';
+					});
+				}
+				function tick() {
+					var d = new Date();
+					$('clock').textContent = '게임 시각 ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+				}
+				tick();
+				setInterval(tick, 20000);
+
+				/* ---------- 말풍선 / 토스트 / 효과 ---------- */
+				function bubble(u, text) {
+					var old = u.el.querySelector('.bubble');
+					if (old) old.remove();
+					var b = document.createElement('div');
+					b.className = 'bubble';
+					b.textContent = text;
+					u.el.appendChild(b);
+					setTimeout(function () { b.remove(); }, 3200);
+				}
+				function toast(text) {
+					var t = document.createElement('div');
+					t.className = 'toast';
+					t.textContent = text;
+					world.appendChild(t);
+					setTimeout(t.remove.bind(t), 2700);
+				}
+				var layer = document.querySelector('.fx-layer');
+				function spawn(cls, n, text) {
+					for (var i = 0; i < n; i++) {
+						var el = document.createElement('span');
+						el.className = cls;
+						if (text) el.textContent = text;
+						el.style.left = Math.random() * 100 + '%';
+						el.style.animationDelay = Math.random() * 0.7 + 's';
+						el.style.setProperty('--dx', (Math.random() * 120 - 60).toFixed(0) + 'px');
+						layer.appendChild(el);
+						setTimeout(el.remove.bind(el), 4400);
+					}
+				}
+
+				/* ---------- 채팅창 ---------- */
+				var log = $('log');
+				var LABEL = { say: '일반', guild: '길드', whisper: '귓속말', system: '시스템', party: '파티' };
+				function say(ch, who, text) {
+					var d = document.createElement('div');
+					d.className = 'c-' + ch;
+					if (ch === 'system') d.textContent = '※ ' + text;
+					else {
+						d.appendChild(document.createTextNode('[' + LABEL[ch] + '] '));
+						var b = document.createElement('b');
+						b.textContent = who;
+						d.appendChild(b);
+						d.appendChild(document.createTextNode(' : ' + text));
+					}
+					log.appendChild(d);
+					while (log.children.length > 60) log.firstChild.remove();
+					log.scrollTop = log.scrollHeight;
+					if (ch === 'say' || ch === 'whisper') {
+						if (who === '킹우요') bubble(units.wooyo, text);
+						if (who === '루비짱' || who === 'To 킹우요') bubble(units.ruby, text);
+					}
+				}
+
+				// 광장 분위기 대사 (자동 반복)
+				var AMBIENT = [
+					['system', '', '블러드로드 온라인 서비스 14주년 기념 이벤트가 진행 중입니다.'],
+					['guild', '흑룡기사', '오늘 레이드 몇 시?'],
+					['guild', '토끼발', '11시 20분 광장 집합'],
+					['say', '지나가던뉴비', '저 전사 장비 뭐임 ㄷㄷ'],
+					['say', '지나가던뉴비', '옆에 힐러 지팡이 성녀의 눈물 아님?'],
+					['guild', '이올쿄', '우요 또 루비 옆에 붙어 있음ㅋㅋ'],
+					['whisper', '킹우요', '루비야 광장 왔어?'],
+					['whisper', '킹우요', '우리 힐러짱 오기 전엔 안 움직임'],
+					['guild', '삼성동네이마르', '둘이 진짜 사귀냐'],
+					['guild', '킹우요', '그럼 뭐가 되는데'],
+					['system', '', '[운영 공지] 서비스 종료 계획은 없습니다. (14년째)'],
+				];
+				var ambientOn = false;
+				function runAmbient() {
+					if (ambientOn) return;
+					ambientOn = true;
+					var i = 0;
+					(function next() {
+						var a = AMBIENT[i % AMBIENT.length];
+						say(a[0], a[1], a[2]);
+						i++;
+						setTimeout(next, 2600 + Math.random() * 2600);
+					})();
+				}
+
+				// 독자가 직접 입력
+				var REPLY = ['ㅋㅋㅋㅋ', '누구세요?', '루비 건들면 죽인다ㅗㅗ', '내 힐러임', '레이드 같이 감?'];
+				$('chatForm').addEventListener('submit', function (e) {
+					e.preventDefault();
+					var v = $('chatIn').value.trim();
+					if (!v) return;
+					var ch = $('chatCh').value;
+					say(ch, ch === 'whisper' ? 'To 킹우요' : '루비짱', v);
+					$('chatIn').value = '';
+					if (ch === 'whisper' || /루비|우요|탱|힐/.test(v)) {
+						setTimeout(function () {
+							var r = REPLY[Math.floor(Math.random() * REPLY.length)];
+							say(ch === 'whisper' ? 'whisper' : ch, '킹우요', r);
+						}, 1200 + Math.random() * 1000);
+					}
+				});
+
+				/* ---------- 캐릭터 메뉴 ---------- */
+				var ctx = $('ctx');
+				var MENUS = {
+					wooyo: [
+						['a', '정보 보기', 'character.html?id=wooyo'],
+						['b', '하트 보내기', 'heart'],
+						['b', '꽃 건네기', 'flower'],
+						['b', '파티 초대', 'invite'],
+						['a', '대화 기록 보기', 'log.html'],
+					],
+					ruby: [
+						['a', '내 정보', 'character.html'],
+						['b', '하트', 'heart'],
+						['b', '성녀의 눈물 들기', 'staff'],
+					],
+				};
+				function openCtx(key, ev) {
+					var u = units[key];
+					$('ctxName').textContent = u.el.dataset.name;
+					var body = $('ctxBody');
+					body.innerHTML = '';
+					MENUS[key].forEach(function (m) {
+						var el = document.createElement(m[0] === 'a' ? 'a' : 'button');
+						el.textContent = m[1];
+						if (m[0] === 'a') el.href = m[2];
+						else {
+							el.type = 'button';
+							el.addEventListener('click', function () { act(m[2], key); closeCtx(); });
+						}
+						body.appendChild(el);
+					});
+					ctx.hidden = false;
+					var r = world.getBoundingClientRect();
+					var x = Math.min(ev.clientX - r.left + 8, r.width - 160);
+					var y = Math.min(ev.clientY - r.top + 8, r.height - 220);
+					ctx.style.left = Math.max(8, x) + 'px';
+					ctx.style.top = Math.max(8, y) + 'px';
+				}
+				function closeCtx() { ctx.hidden = true; }
+				Object.keys(units).forEach(function (k) {
+					units[k].el.addEventListener('click', function (e) {
+						e.stopPropagation();
+						openCtx(k, e);
+					});
+				});
+				document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCtx(); });
+
+				function act(what, target) {
+					if (what === 'heart') {
+						spawn('fx-heart', 12, '♥');
+						if (target === 'wooyo') {
+							say('system', '', '루비짱 님이 [하트] 모션을 사용했습니다.');
+							setTimeout(function () { say('whisper', '킹우요', '뭐야 루비야 나한테 하트 줬어?'); }, 1400);
+						} else {
+							setTimeout(function () { say('whisper', '킹우요', '거짓말 다시 해 줘'); }, 1400);
+						}
+					}
+					if (what === 'flower') {
+						spawn('fx-petal', 20);
+						say('system', '', '루비짱 님이 [꽃 건네기] 모션을 사용했습니다.');
+						setTimeout(function () { say('system', '', '킹우요 님이 꽃을 받았습니다.'); }, 900);
+					}
+					if (what === 'invite') {
+						say('system', '', '킹우요 님은 이미 루비짱 님의 파티원입니다.');
+						setTimeout(function () { say('whisper', '킹우요', '이미 내 팀임'); }, 1100);
+					}
+					if (what === 'staff') {
+						spawn('fx-petal', 24);
+						say('system', '', '[성녀의 눈물]에서 장미 꽃잎이 흩날립니다.');
+					}
+				}
+
+				/* ---------- 스킬 ---------- */
+				var cdMap = { heal: 2, shield: 4, heart: 3, flower: 3 };
+				document.querySelectorAll('.skill').forEach(function (b) {
+					b.addEventListener('click', function (e) {
+						e.stopPropagation();
+						if (b.classList.contains('is-cd')) return;
+						var s = b.dataset.skill;
+						b.style.setProperty('--cd', cdMap[s] + 's');
+						b.classList.remove('is-cd');
+						void b.offsetWidth;
+						b.classList.add('is-cd');
+						setTimeout(function () { b.classList.remove('is-cd'); }, cdMap[s] * 1000);
+						if (s === 'heal') {
+							spawn('fx-petal', 16);
+							say('system', '', '루비짱 님이 [장미빛 축복]을 시전했습니다. 킹우요 님의 생명력이 회복됩니다.');
+							bubble(units.wooyo, '역시 내 전담 힐러');
+						}
+						if (s === 'shield') {
+							say('system', '', '루비짱 님이 [성역의 장막]을 시전했습니다.');
+							toast('성역의 장막');
+						}
+						if (s === 'heart') act('heart', 'wooyo');
+						if (s === 'flower') act('flower', 'wooyo');
+					});
+				});
+
+				window.addEventListener('resize', function () {
+					calcMaxY();
+					place(units.ruby, units.ruby.x, units.ruby.y, true);
+					place(units.wooyo, units.wooyo.x, units.wooyo.y, true);
+				});
+			})();
+		</script>
+		<script src="assets/keys.js"></script>
+	</body>
+</html>
