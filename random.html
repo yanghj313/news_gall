@@ -1,0 +1,920 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+		<style>
+			:root {
+				color-scheme: light;
+				box-sizing: border-box;
+				padding-top: env(safe-area-inset-top, 0px);
+				padding-bottom: env(safe-area-inset-bottom, 0px);
+			}
+			html {
+				scroll-padding-top: env(safe-area-inset-top, 0px);
+			}
+			body {
+				margin: 0;
+				padding: 0;
+				font:
+					14px -apple-system,
+					BlinkMacSystemFont,
+					sans-serif;
+				background: #fff;
+				color: #000;
+			}
+			img {
+				max-width: 100%;
+			}
+			[hidden]:not([hidden='until-found' i]) {
+				display: none !important;
+			}
+		</style>
+	</head>
+	<body>
+		<title>웡낫 키워드 룰렛</title>
+		<meta name="claude:viewport-fit-sides" content="cover" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Limelight&family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" />
+		<style>
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-1Thin.woff2') format('woff2');
+				font-weight: 100;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-2ExtraLight.woff2') format('woff2');
+				font-weight: 200;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-3Light.woff2') format('woff2');
+				font-weight: 300;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-4Regular.woff2') format('woff2');
+				font-weight: 400;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
+				font-weight: 500;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-6SemiBold.woff2') format('woff2');
+				font-weight: 600;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-7Bold.woff2') format('woff2');
+				font-weight: 700;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-8ExtraBold.woff2') format('woff2');
+				font-weight: 800;
+				font-display: swap;
+			}
+			@font-face {
+				font-family: 'Paperozi';
+				src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-9Black.woff2') format('woff2');
+				font-weight: 900;
+				font-display: swap;
+			}
+			/* Layout: casino marquee on top, one big slot cabinet below — the player's ticket (number + code) on the left, the reel and lever on the right */
+			:root {
+				--felt: #0d3328;
+				--felt-deep: #071c16;
+				--felt-line: #1d5141;
+				--gold: #d9ab4a;
+				--gold-soft: #8a6a2a;
+				--ivory: #f4e8c8;
+				--ivory-dim: #b9ad8c;
+				--red: #a81f2c;
+				--red-hi: #d23a45;
+				--cabinet: #16100b;
+				--reel: #fbf5e4;
+				--ink: #1c140c;
+				--err: #ff8a8a;
+				--f-latin: 'Limelight', 'Black Han Sans', Georgia, serif;
+				--f-display: 'Black Han Sans', 'IBM Plex Sans KR', sans-serif;
+				--f-body: 'IBM Plex Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+				--f-head: 'Paperozi', 'IBM Plex Sans KR', 'Apple SD Gothic Neo', sans-serif;
+				--f-mono: 'IBM Plex Mono', ui-monospace, monospace;
+				--reel-h: 120px;
+				color-scheme: dark;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				background:
+					radial-gradient(ellipse at 50% 0%, var(--felt) 0%, var(--felt-deep) 75%) fixed,
+					var(--felt-deep);
+				color: var(--ivory);
+				font-family: var(--f-body);
+				font-size: 15px;
+				line-height: 1.55;
+				padding-left: max(16px, env(safe-area-inset-left, 0px));
+				padding-right: max(16px, env(safe-area-inset-right, 0px));
+				padding-block: 28px 64px;
+			}
+			.wrap {
+				max-width: 880px;
+				margin: 0 auto;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+			}
+
+			.marquee {
+				position: relative;
+				border-radius: 18px;
+				padding: 28px 24px 26px;
+				text-align: center;
+				background: linear-gradient(180deg, #2a0d10, var(--cabinet));
+				border: 3px solid var(--gold-soft);
+				box-shadow:
+					0 0 0 6px var(--cabinet),
+					0 18px 40px rgba(0, 0, 0, 0.45);
+			}
+			.marquee::before {
+				content: '';
+				position: absolute;
+				inset: 8px;
+				border-radius: 12px;
+				pointer-events: none;
+				background:
+					radial-gradient(circle, var(--gold) 0 3px, transparent 4px) 0 0/22px 22px repeat-x,
+					radial-gradient(circle, var(--gold) 0 3px, transparent 4px) 0 100%/22px 22px repeat-x;
+				animation: chase 1.1s steps(2) infinite;
+			}
+			@keyframes chase {
+				to {
+					background-position:
+						22px 0,
+						-22px 100%;
+				}
+			}
+			.eyebrow {
+				font-family: var(--f-mono);
+				font-size: 12px;
+				letter-spacing: 0.32em;
+				color: var(--gold);
+				text-transform: uppercase;
+				line-height: 50px;
+			}
+			h1 {
+				margin: 6px 0 4px;
+				font-family: var(--f-latin);
+				font-weight: 400;
+				font-size: clamp(34px, 7vw, 60px);
+				line-height: 1.05;
+				text-wrap: balance;
+				text-shadow:
+					0 0 18px rgba(217, 171, 74, 0.45),
+					0 2px 0 var(--red);
+			}
+			h1 img {
+				display: block;
+				width: min(100%, 520px);
+				height: auto;
+				margin: 0 auto;
+			}
+			h1 .ko {
+				font-family: var(--f-head);
+				font-weight: 500;
+				display: block;
+				font-size: 0.5em;
+				letter-spacing: 0.06em;
+				color: var(--gold);
+				text-shadow: none;
+				margin-top: 6px;
+			}
+			.sub {
+				color: var(--ivory-dim);
+				font-size: 14px;
+				max-width: 44ch;
+				margin: 10px auto 0;
+			}
+
+			.cabinet {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+				gap: 20px;
+				background: linear-gradient(180deg, #24180f, var(--cabinet));
+				border: 1px solid #3a2a18;
+				border-radius: 18px;
+				padding: 22px;
+			}
+			@media (max-width: 680px) {
+				.cabinet {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			.ticket {
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				min-width: 0;
+			}
+			.ticket h2 {
+				margin: 0;
+				font-family: var(--f-head);
+				font-weight: 500;
+				font-size: 20px;
+				color: var(--gold);
+			}
+			label {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				font-size: 13px;
+				color: var(--ivory-dim);
+			}
+			select,
+			input {
+				font: inherit;
+				font-size: 16px;
+				color: var(--ivory);
+				background: #0b0805;
+				border: 1px solid var(--gold-soft);
+				border-radius: 10px;
+				padding: 11px 12px;
+				width: 100%;
+			}
+			input {
+				font-family: var(--f-mono);
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+			}
+			select:focus-visible,
+			input:focus-visible,
+			button:focus-visible {
+				outline: 2px solid var(--gold);
+				outline-offset: 2px;
+			}
+			.msg {
+				font-size: 13px;
+				min-height: 1.5em;
+				color: var(--ivory-dim);
+			}
+			.msg.err {
+				color: var(--err);
+			}
+			.hint {
+				font-size: 12px;
+				color: var(--ivory-dim);
+				border-top: 1px dashed var(--felt-line);
+				padding-top: 12px;
+				margin: 0;
+			}
+
+			.slot {
+				display: flex;
+				flex-direction: column;
+				gap: 14px;
+				min-width: 0;
+			}
+			.window {
+				position: relative;
+				height: calc(var(--reel-h) + 6px);
+				overflow: hidden;
+				border-radius: 12px;
+				background: var(--reel);
+				border: 3px solid var(--gold-soft);
+				box-shadow:
+					inset 0 14px 16px -10px rgba(0, 0, 0, 0.6),
+					inset 0 -14px 16px -10px rgba(0, 0, 0, 0.6);
+			}
+			.window.win {
+				border-color: var(--gold);
+				box-shadow:
+					0 0 0 3px rgba(217, 171, 74, 0.35),
+					0 0 34px rgba(217, 171, 74, 0.45),
+					inset 0 14px 16px -10px rgba(0, 0, 0, 0.4);
+			}
+			.strip {
+				will-change: transform;
+			}
+			.sym {
+				height: var(--reel-h);
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				padding: 10px 18px;
+				color: var(--ink);
+				gap: 4px;
+			}
+			.sym .g {
+				font-family: var(--f-mono);
+				font-size: 12px;
+				letter-spacing: 0.1em;
+				color: var(--red);
+			}
+			.sym .k {
+				font-family: var(--f-display);
+				font-size: clamp(19px, 3.4vw, 25px);
+				line-height: 1.25;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.sym.idle {
+				align-items: center;
+			}
+			.sym.idle .k {
+				font-family: var(--f-latin);
+				font-size: 34px;
+				letter-spacing: 0.3em;
+				color: #b08a3c;
+			}
+
+			button {
+				font: inherit;
+				cursor: pointer;
+				border-radius: 999px;
+				border: 1px solid var(--gold-soft);
+				background: transparent;
+				color: var(--ivory);
+				padding: 9px 16px;
+				font-size: 14px;
+			}
+			button:hover:not(:disabled) {
+				border-color: var(--gold);
+				color: var(--gold);
+			}
+			button:disabled {
+				opacity: 0.45;
+				cursor: not-allowed;
+			}
+			.spin-btn {
+				font-family: var(--f-display);
+				font-size: 22px;
+				letter-spacing: 0.08em;
+				padding: 14px 30px;
+				width: 100%;
+				background: radial-gradient(circle at 35% 30%, var(--red-hi), var(--red) 60%, #6d1119);
+				border: 2px solid var(--gold);
+				box-shadow:
+					0 5px 0 #4d0b12,
+					0 0 22px rgba(210, 58, 69, 0.35);
+			}
+			.spin-btn:hover:not(:disabled) {
+				color: var(--ivory);
+				filter: brightness(1.1);
+			}
+			.spin-btn:active:not(:disabled) {
+				transform: translateY(4px);
+				box-shadow: 0 1px 0 #4d0b12;
+			}
+
+			.result {
+				border: 1px solid var(--gold-soft);
+				border-radius: 12px;
+				padding: 14px 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				background: rgba(217, 171, 74, 0.06);
+			}
+			.result .lbl {
+				font-family: var(--f-mono);
+				font-size: 11px;
+				letter-spacing: 0.2em;
+				color: var(--gold);
+				text-transform: uppercase;
+			}
+			.result p {
+				margin: 0;
+				overflow-wrap: anywhere;
+			}
+			.result .row {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			.rules {
+				font-size: 13px;
+				color: var(--ivory-dim);
+				background: rgba(0, 0, 0, 0.25);
+				border: 1px solid var(--felt-line);
+				border-radius: 14px;
+				padding: 14px 18px;
+			}
+			.rules ul {
+				margin: 6px 0 0;
+				padding-left: 18px;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+			.rules b {
+				color: var(--ivory);
+			}
+			@media (min-width: 681px) and (min-height: 900px) {
+				body {
+					padding-block: 16px 28px;
+				}
+				.wrap {
+					gap: 16px;
+				}
+				.marquee {
+					padding: 18px 24px 16px;
+				}
+				h1 {
+					margin: 2px 0 0;
+				}
+				h1 img {
+					width: min(42vw, 480px);
+				}
+				h1 .ko {
+					margin-top: 2px;
+				}
+				.sub {
+					margin: 10px auto;
+				}
+				.cabinet {
+					padding: 16px;
+				}
+				.rules {
+					padding: 10px 16px;
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.marquee::before {
+					animation: none;
+				}
+			}
+		</style>
+
+		<div class="wrap">
+			<header class="marquee">
+				<div class="eyebrow">WN Collab · Keyword Draw</div>
+				<h1><img src="title.png" alt="Keyword Roulette" /><span class="ko">웡낫 키워드 랜덤 룰렛</span></h1>
+				<p class="sub">주최자에게 받은 번호와 코드를 넣고 레버를 당기세요. 내 결과는 내 코드로만 열립니다.</p>
+			</header>
+
+			<section class="cabinet">
+				<form class="ticket" id="ticket" autocomplete="off">
+					<h2>내 티켓</h2>
+					<label for="sel-no"
+						>참가 번호 · 닉네임
+						<select id="sel-no" required>
+							<option value="">번호를 골라 주세요</option>
+						</select>
+					</label>
+					<label for="in-code"
+						>개인 코드
+						<input id="in-code" placeholder="ABCD-1234" maxlength="9" required spellcheck="false" inputmode="text" />
+					</label>
+					<div class="msg" id="msg" role="status"></div>
+					<p class="hint">코드는 DM·메일로 보내드린 8자리예요. 하이픈은 넣어도 빼도 됩니다.</p>
+				</form>
+
+				<div class="slot">
+					<div class="window" id="window">
+						<div class="strip" id="strip">
+							<div class="sym idle"><span class="k">? ? ?</span></div>
+						</div>
+					</div>
+					<button type="submit" form="ticket" class="spin-btn" id="btn-spin">SPIN ▸</button>
+					<div class="result" id="result" hidden>
+						<span class="lbl">Your keyword</span>
+						<p id="result-text"></p>
+						<div class="row"><button type="button" id="btn-copy">결과 복사</button></div>
+					</div>
+				</div>
+			</section>
+
+			<section class="rules" aria-label="안내">
+				<b>안내</b>
+				<ul>
+					<li>배정은 모든 참가자가 서로 다른 키워드를 받도록, 그리고 본인이 낸 키워드와 신청서에 적은 어려운 소재는 나오지 않도록 미리 섞어 두었어요.</li>
+					<li>몇 번을 돌려도 같은 결과가 나와요. 결과를 바꾸고 싶다면 주최자에게 문의해 주세요.</li>
+					<li>코드는 다른 사람에게 알려주지 마세요. 코드가 있으면 누구나 그 결과를 볼 수 있어요.</li>
+				</ul>
+			</section>
+		</div>
+
+		<script>
+			const DATA = {
+				iter: 150000,
+				entries: [
+					{ no: 1, name: '\uac15\ub0a8\ud64d', s: 'ge8lhfJ42Vca4RaHO5i+6w==', v: 'fvmQ4U6gN+ib87Uf', c: 'VwJrE93KqHXXaaG5aE70FNbJDuyTRdomEOpB9zVPplFV35FSRUbFfdGe0thfCi/1qz9uvB+W3ZL36MsUgdA=' },
+					{ no: 2, name: '\uac1c\uc544\ubb34\ub9d0', s: 'Jh7eFIiG1Yh31Qx+S6hpAA==', v: '7SvTSxsE505hf5B9', c: 'OiXE/pMa4zpMZ721wRviUg+WO3g4wgKo8iQnewiSeqgrsRXWYW6HKQnz1hQN5fQfkkD3HCJ7ZdOg' },
+					{
+						no: 3,
+						name: '\uaca8\uc6b8\ub9db \ub9c9\ub300 \uc0ac\ud0d5',
+						s: 'MCtwClvvyEjtE9OCNpSmUg==',
+						v: '4C/LhPXSD8KKOoDv',
+						c: 'BuTxyEcJeNV1gRSDhBdkHo3jWlrVMn76bztq3KiXlwt3rndZiobybeXS1Pujpldg51VfwDGmxVuhcW6WvN7j/fUQIl3z',
+					},
+					{ no: 4, name: '\uacb0', s: '5qvWR10XmobTiTXpRxwU2Q==', v: '1yLxgd2T5wuUZZ9r', c: 'K6Ej3nCTSlZWfX3ZjUxEHxd0URgp4WsM1t9aiut261pKr+8X+7I2Orf0IKKta9v/sQ4ATw==' },
+					{
+						no: 5,
+						name: '\uace0\ubb38\ub355',
+						s: 'mlrgEQkQeX4RMKPihElSlg==',
+						v: 'wYDlz8hDyj9D8jX2',
+						c: '97Y7YYZqaL6iimfFJQeiV1W4KQQR09a7YUewUPoq2GhrrzBhvFbyfhhu+YWP8JTPCtqgQ/LQsiAgEr+onxpr3oD0X5YJ',
+					},
+					{
+						no: 6,
+						name: '\uae40\uc218\uce90',
+						s: 'nbevdyVms/QTSedyZzz2fg==',
+						v: '58zPb6mVB/UwupGI',
+						c: 'Ay6CPJwx8Mmmv/9cQpXWsyQ/qBJ2Q7Tn/6D6YduZz9N3Hn9NKHPbCbIeia99QaELf7dMUT+ZclfPmr3WkE88VCRC+g==',
+					},
+					{ no: 7, name: '\uaf2c\ub0e5\uc8fc', s: 'tUadyMgTgYamw7RYWwGpSA==', v: 'F99LrOjcy7aQkjoA', c: 'ph2+d47CZlH2QpNxWsidwkL6n1N53qcYtE74VxoudhOkESZJKnrRC/IcUJmKPraKdWyLFDx1PQU=' },
+					{ no: 8, name: '\ub2dd', s: 'QrXOeRQ3UM5Iy2OW4FNnXg==', v: 'XTrxk+X8lGNFXyBV', c: 'vaD9pCphylqig6iNdt9yi+DTH99zdUy+FHvknueTGT3I4sYtHv0N2F60s3q/dw==' },
+					{
+						no: 9,
+						name: '\ub2e4\uc628',
+						s: '1vqthe+/yLpCn3SV9E8Z4w==',
+						v: '5V5aG9qLpwENxmir',
+						c: 'lgH9QL+f1tGQnYvwUwCF33ZnoCnFbUMHhpToo6H/71mzxyLI08p7PP8zFWMwYIQ+VX6l6ti8StDo3bSt+g7zSMoH1a3StEMGYlsT',
+					},
+					{ no: 10, name: '\ub2e8\ud14c', s: '8PLOscUHlS4x1OT62ZcSYA==', v: 'RWscy+aHxXlXU03d', c: 'tNnKaRgOpoYLP+6cQZYbKBtUraBwOwyV0ewV2TV6PWDqd6YXJAxwLalf811Me9+2GbunsS4+8Sj7Bw==' },
+					{ no: 11, name: '\ub2ec\uc218', s: 'tTwShm/rwrI9Myew6hHTZg==', v: 'Hnmll4D0CqX9dB0Q', c: 'tTR/s/kyNwlEQm3zOZ2z6CZtVDWPEdQoHhkIKpZd45pEM9siRlvavsDBzDh3pdO96i0E/IksA7P8OI5RcAF/ffL/aHA6' },
+					{ no: 12, name: '\ub3c4\ud654', s: 'mSsNoih+tUfNcvZGHbhSXg==', v: 'Te+pwmgvtMvRl3rB', c: 'kMKThaClSYgOQ52oAIuZkcwyTLQl4h8tuPdECXjqeHtq+S2zpIOrTmrV+/e/teXduYexCz6HWg==' },
+					{ no: 13, name: '\ub4b7\ubc29\ub299\uc740\uc774', s: 'yjotIVecm7yuNqbOfQqHeA==', v: 'mAAtb0RlB/I+Eb7x', c: '+XBVYFYL1nsWIXeHWzmu8mqlQW3SiVl/pbSCneyU8u7pfWi2kWCRpPNw6zJJoWC/xw==' },
+					{ no: 14, name: '\ub4f1\uc0b0\uac1d', s: 'uo0Ar1ly75Vi2V7moP7uGA==', v: 'RiK3UfL4StBm7nXl', c: 'fKgiOQ7Raw5Qu1m4q6lJ6VUGn9PycZF+LUPbfiKvsdLwdqgnWGk+skCiVouialu6SQPFfA==' },
+					{ no: 15, name: '\ub9cc\uba39\uc2f6', s: 'FjkuVw/jxoNCu6Kp5NdXoA==', v: 'WJ+jcGRjqsSPaCM4', c: 'T8gGAoMFf/k6J7plzpD/9MofZAi7F1hCGu/Zaba/ITL0XpeF0r4D6SHy80qJfRpFt747y92N947n+HQ=' },
+					{ no: 16, name: '\ubaa8\ub798', s: 'zoLsXC+Gsm0J/PH6FYlzDw==', v: 'pwInOLekccl1gQba', c: 'BZZKiKjtUOOu9WA0lJCOUFPBdQSZbHvv09jzgtZWB1FUwuVAo19U' },
+					{ no: 17, name: '\ubabd\uc0b0', s: 'y2cYZDKJYEJihtRsiEjq+w==', v: 'c33lzAApaqnWf3Sh', c: 'IHuYAA9NPvnaZOU0Y5a37XF4k147qlnarWAh6+7m7n16FuRSPtsGwsab11dC8O5XgZhCNwIkeUuLLU9d6tYi09HKoA==' },
+					{
+						no: 18,
+						name: '\ubc24\uc774',
+						s: 'WjGsOLCUgtt+UfS9l2y6YA==',
+						v: '2llxVM4NVZ0f5XpP',
+						c: 'jNFv5ofQpGU2T++ifYLw7NlV9kh3lAXYS8Hgsd71dvzffxOfX94L4uAY+lrNyUdOcnu4GINoSV0zturACBlAOt1bUQMaQX5CzqGK1koghA==',
+					},
+					{
+						no: 19,
+						name: '\ubc43\uc4f8',
+						s: '1s8wl90MH/C9ACGHFs4xGw==',
+						v: '0Jm/CbpsQdXaYlBj',
+						c: 'PjY0YY0zQlTtNYHQ+x8HaRFfBsDx/M103n+6Ci88LGvTYAaBcOHs1tlfF8QZypCSvyakcIJhhmLuVZG1LGiRFR1wB0I8RI3nn/IS4Luy8lWE6wGi1DAK/iUhNe8=',
+					},
+					{ no: 20, name: '\ubc84\ub3c5', s: 'gjLsKUe6Z0IdrAtGgwZDmw==', v: 'MHM0o3sFPabroM/3', c: 'IF9KfYN29Wi5QtCRpVNjX4ypSpby7Nv+MybGlX2DlA0fqT/yz7NQJsb48qVAdavbT5m8dJvbL9GxcKARYs6itl265mvoG1DB' },
+					{
+						no: 21,
+						name: '\u864e(\ubc94)',
+						s: 'C17FbnkFitpXNEStrN/t6w==',
+						v: '1OZmI0nMX9+sv4Oj',
+						c: 'yRpm4c5RWtWjoW5uqbEEFCIkNwfLcdimg1j9y0ZHh04OvkJ3rBueC1mwZ9koj5+PgrFrT/zDnxJLmCrDgJBD7iUIXo9Frgxwr9qY90319hO4mw==',
+					},
+					{ no: 22, name: '\ubd80\ud79b', s: '0gqpMDHcKn1tuImgV9/LRg==', v: 'DBwk1v8sD0/T4YGq', c: 'cpokV0mgHJxLi2368UikIWFPBa8NNIani8/rrmx+vkPBcOi8+VuwH98by0Z+pcAMzF8pYFegacqxeMfTsFgCKydDkFc=' },
+					{ no: 23, name: '\ube44\uc694', s: '/WsRoD/rxQES6wiy3jVUsw==', v: 'x5XH7RKyUxyAhOmN', c: 'E2r70QuNxa7s2476sJrIb85NlgsltWc6z8/TNNw+QYf9OV/mZGu7KT9k3zDISkAYGUk1j62blyD5h5WSQUHI+zKNbanE' },
+					{ no: 24, name: '\ubed0\uae30', s: 'l0d5vFurWzjQ9JDEj+9l0Q==', v: 'GlgTfwA6bb/3b4L1', c: 'jCuelgwgrn/Pw2cgieMuUEKfPxiw8c0LKTwkob8k9jh/D+oR1kWY21b4Nj3EPcCmKRu0x6wuuU0JdFjMCdo=' },
+					{
+						no: 25,
+						name: '\uc0ac\ub4dc',
+						s: 'UfregyibH8tj9A14pQ86rA==',
+						v: 'v99nvBG09gj1RBS7',
+						c: 'oixn55mOvQM4AAsVS/uthDyfL0BSsjBgOHi4o8l5Y14787vGdg9Z13yVIgGjtgbUIV/pUSVFhIhH9fWfN8Sx46zT1AfvsCtvMRsJPu1iI+7gCS/V0T5AUo1gjh3q',
+					},
+					{
+						no: 26,
+						name: '\uc0cc',
+						s: 'veM9X2yyuoVc0Wea0qgcrA==',
+						v: 'dEWDhH959HkkhslQ',
+						c: 'hHan29SWz28ynvn2KuPufoXyG8+HYCPTEyROyKIRTNIKlagivqlW0l3hB8sUhcZzDtbjoXMPNhC9WtaqtsvNVF8XMdIYKBI+WSql9UkpJQ==',
+					},
+					{ no: 27, name: '\uc0f9\ud478', s: 'kFXzKxUE/hBp/DyNhUTJYQ==', v: 'CX4rRkzxNB3Pnmkw', c: '6IFoVryxul9KWiEBh/RSk+Ow+cr7O2m/aLxWdaYjxYAiTCSp4Ms4s93DQ9+95BpL+uzg+To4GQ+d4uShJZzFw77JnkMDbMTF' },
+					{ no: 28, name: '\uc120', s: 'XRRHdH1aE/lmH/+YvjH3eQ==', v: 'uCfnUspQcKiL60K5', c: 'p4Q94MIfC6xMI5Rc041qKMgvxw1MBm4DttFW+MIZxdEP+g1TjXU7g3a/yTJtXpxRkQ==' },
+					{ no: 29, name: '\uc120\uad6c\uc548', s: '2BYcTD3/FJYJ3XODLTMYkQ==', v: 'dTQvuDFXBhGpsRg1', c: 'XTl4npt5nHJUef/zQja9n8quVLxb2gP1j2z47EraQbwc5p3IjkOLTSCzA9dl0J0XnQbl6w==' },
+					{ no: 30, name: '\uc12c', s: '62Dqj+N5pPfJJTpwYEbgMQ==', v: '6fPIvbWceaN/Jqo3', c: '9gINGkd/v/mR9GtCcvCTlFyiP2XYXbHUpPNEbVC1et05kbldHVChH8tPbnM0VlIYig==' },
+					{
+						no: 31,
+						name: '\uc18c\uc7a1\ub294\uc18c\ub140',
+						s: 'qiM1OvvaA8gcqGE+bxh64g==',
+						v: 'JJHMLDJ/ncufFSJ4',
+						c: 'x+Ym9YWmjH+bSOiZjQRGIq2VUFdibv2iiM3es7gY0dDXTC5/Q8S+DS1XgURAmidhVazKHRtSH9iGxx7v9vV7RL0=',
+					},
+					{ no: 32, name: '\uc218\uc218', s: 'Yjn85v2eBP6ToDoPxrRWnQ==', v: 'MsaPKhY4mSIpzaFE', c: 'ygzFNbr7nkjZcvEYbbPoPF9L+MHaLuLPShILHcBBQLuD+8VDCwQA7CBC+22RkX0s9AaDNg==' },
+					{ no: 33, name: '\uc2ec\uc5f0', s: 'xFm3NlCdgKoN4OzqfXgJ/g==', v: 'a/+KCNgZURyr3EKx', c: 'UXwvXNB+SOdbFE5C95FB8GrXV8XRlu5Q6d/U70Smui6Ysa6qdKvqCaSK8JyMLw==' },
+					{ no: 34, name: '\uc544\uc624', s: 'Z6gKJqAJLuZug4y0OIZ2DA==', v: 'TK99osgKi2dbVyLS', c: 'f9r7BK366d/ovdb747d1oqoF4PETkiC67FBD+RvlmgpQWrgzFwgjxrFOFB81FYqh1wqG7FA+04rGH8TC5v2yR4gHsz50uA==' },
+					{ no: 35, name: '\uc591\uc591', s: 'fO14+4ZBuS0MGupsobqyfQ==', v: 'kKNHj94t+2LUkm8B', c: 'EcWkXEg/Sku4Q4vvj8InJs6APG+RqIAtGPHxherWGHVHI/IkDAfxddRpsvpFUCm3rcr6ndEOfA8=' },
+					{ no: 36, name: '\uc5d0\ub179', s: 'r7BgO3kAZTgJ3Ajy1cD6XQ==', v: '2U/RUXJvr/fghhlk', c: 'jmMBlrq/C7YeUSzDFPv0DdZVMemE6Ngc4KbJEttEmTJ7gq0F7DDjAwyOaqxZMXqQOt0iiWUH/VHDJYpFaMmXq/0=' },
+					{
+						no: 37,
+						name: '\uc5d0\uc394',
+						s: 'TbK049l0KZp0DeW90fWR+Q==',
+						v: 'UTC4VEIiyQMENtHw',
+						c: 'k7bZDysQ7et78DYDa3w6G/5jCPuj7XnfX9l11qHhdNXsbKR6Ppx40u8YC7ktJbPI825FYEZLMGGL8Hrry/y67agxX0rqONMJKZ3/DdU=',
+					},
+					{
+						no: 38,
+						name: '\uc774\ub060',
+						s: 'IMO87ptc9fJxGQm1pYWVHg==',
+						v: 'rE1wVfTYk6haHzU7',
+						c: 'bBZMbk+jLjOrRnKLCdI0m0U1J6QykQvzWtZeyu2m8QNJ6pNV/0jDQm8Uj+EsnecI/PodHwzaoN+9DaEEaR3O0ejbT5+NvvHEDEerc14f9CXnUddLNPc=',
+					},
+					{ no: 39, name: '\uc774\ub9c8', s: 'r0rM3Brgt1SYr2RgMVwkLw==', v: 'APh7jxgse85skfTh', c: 'QiwHm/KA1eKYr8rKf114nIdqehgHtFL3I0KJWZqKITJxBv4ZG6FwzL1dKxX7hq2MwPevNrfVSqNDoJTi0cBmWfqXewMv' },
+					{ no: 40, name: '\uc774\uc800', s: 'WjlvyxEbrZ4CJVU0w6/3Ow==', v: 'Jm57Wq+J3K6M/We2', c: 'Xb5YGPI2SqP6awa2y8w8IoZy4AoSUBf5nfW6qdD6UR57ImbrSO44heDcGOnrYGzXRY3XPJtYT+4=' },
+					{ no: 41, name: '\uc774\ud2f0', s: 'lygQkI0OyOfmkAu6Sc+M0Q==', v: '/zsIHV6lqztklHfy', c: 'jXCrR18AJzJG5e3YwnN0m01xmjCqabWhRmZ6K3HOaHbswEfTAHnyAKDbbfElQtF/y5KFE6TG9jMwDfc/CbiUx1f4xvQHLw==' },
+					{ no: 42, name: '\uc775\uba85\u2460', s: 'cuyZazYJjFul0/Jpehr8Zg==', v: 'bJEPhBBSawVLu1bh', c: 'QQtsuIAK5dES1CUAWhok73ec+qJHv7mba5FjHAcKn5jPFGFp0YOy+PA3wu8nVvJ4JlsXQZ266o1UWnA=' },
+					{
+						no: 43,
+						name: '\uc775\uba85\u2461',
+						s: 'nONh2SLPLC8BrM/npC3i1A==',
+						v: '3TJXaxxe3GolYRKF',
+						c: 'xYHrNdI0PJr+xsFCXyoRyA869MgaOjk/wkninqD1mJHIA3ZkEPMVkqanSSMSDlHnQFZHxK7Kl5JCLiikmS9aNnqwmqIq9ToOGc1cx1lrzELMdpJKq2IY5Y1sp6uACRKV',
+					},
+					{ no: 44, name: '\uc7a1\ucd08', s: 'P1QKNAZtsCNZIvzbRtNd9g==', v: 'viH+BKmUbsjHRFeP', c: 'g5tf1W86Bh0Li+iI3xskJrmaNdHXeoPWPtRx43UREW4pvIFltzvI' },
+					{ no: 45, name: '\uc808\ud0a4', s: '7OJciI9fWIce9gHXSEVt3g==', v: 'v1iOyK0mvcp84uUS', c: 'kLsP24+Xv8ajMXYzFaYB9ouLzEUmaXVWKF66PDzhgGZiSIgn+ynLKiM03ixXQKQ+CHTOK3eQzg==' },
+					{ no: 46, name: '\uc81c\ud2b8', s: '7VWku8iUbJS+sJWFbp3zlg==', v: '0ZWe4PxF8q1/qKNs', c: 'Z9Uk979hrxcUpHsRqQ+AOdGRNWY0+CSKD6mV+cGr7cRUvb84husp1VV5wNJFs3iNnnYYmunpumnvLnk=' },
+					{ no: 47, name: '\ucc30\uc2f9\ub5a1', s: 'FuP/dXDrHn9A6ZPgJGqUnw==', v: 'ekedkkupPtTTsH70', c: '7cfNz8Y4F0wenSAwNJqrNvvEMiO9OqBsWLbRqjSj7i4bWvKk9VBMhRZy34xj18HmxFfnA6yCV5pRm1iU' },
+					{
+						no: 48,
+						name: '\uccad\ub85d',
+						s: 'MJq7c1pNMxoggeK/2FVqdA==',
+						v: 'qYjERTMRon7Vg4Vy',
+						c: '4VznzDf3hgH8WzLZ3/7PDh0MMMxQfo7pPS3ooByBdSA4IvicLy77HZe1y80hdP88YEVV8X0tCtHLe67Kir+3382Ng5fnkZqs9jU6JRE/AX4TLV4KBrhvRg==',
+					},
+					{
+						no: 49,
+						name: '\uccad\uc18c\ub144',
+						s: 'vcYGJncyf/kU6QVFs9PBYw==',
+						v: '+Jf+EW1UrAVm9dhf',
+						c: 'O1sPETwmOhDYcfFMyxcABxVZs13SYAATZfFbxQxP5IMrzxUmHlEehB2MKYkIqCVwA9pIxCV387SBzSyr8pU6CWioU89UigsJaw==',
+					},
+					{ no: 50, name: '\ucf8c', s: 'JvgUVhg5MrXnJUvArYgiCg==', v: 'HCxmPM8IunqTKH+A', c: 'alJRtav+U3dJpMad7O8LcgkvLwL0DM3F7HEX2/SOAMw+VP0g62u09Ja3BcN3U083A2Wnb8tTqTerqaCiMA==' },
+					{
+						no: 51,
+						name: '\ucf8c\uc18d\ucde8\uc0ac',
+						s: 'mGDkdSCfCaoKuhvd7m8Y4g==',
+						v: '1S0w43oE3Zlxr0n6',
+						c: 'L4C9dudIZgnHfYhmVKHuHI42SxznVeqQeUcISo9mKErMDB4Ie4Z6MdhZ89wDSII/yA4yFUOE9OW/T3aVNANK06qsfENmGd7dCQ+x1g==',
+					},
+					{ no: 52, name: '\ucfc4\uc57c', s: 'Gx3YCjq2JKPLjgm1lqPUIQ==', v: 'kTGLQWhZ2GGGmnGD', c: '5bZz6QwDrCk5Yk2SCpT91QI2j3ejKCiJolYnBsuukZ9V3qLxkF43b/RLHVYwSixMdId7hntOEDw=' },
+					{ no: 53, name: '\ud1a4\ud76c', s: 'WvSNIZ84BhK9QkaDOVoC5Q==', v: '5ChAIgfUAGtDY3wg', c: '6dhowO4a3t5prRo0afjcbLMcJbXGeKiJAlhlBoXjlO9qFOCVxbeTrVT5t011oQ==' },
+					{
+						no: 54,
+						name: '\ud638\ub5a1',
+						s: 'JqVEpqvAWp17ZI3p+5QYWA==',
+						v: 'XvOH1FCApLgLsCDd',
+						c: 'xSZUa/YdqahL9ql+eVz1VPea9XEscFe55fO4ygQs563n0uHG4WIZZYhFebS59oLhfIAWNmiCYRCLrCXaTUN4t1f4yEkTIYPQWm/vyDX6Ei9GBlacrfNO7hw=',
+					},
+					{
+						no: 55,
+						name: '\ud711\uc774',
+						s: 'VGNvaSGEJDTk/ET9cQrDKw==',
+						v: 'i8W3UG14tNYui/nw',
+						c: 'oM5AYg3YSIqBZT8gQWI8iaw4nDMgBazHDdCTrGPVAO1YxCP4/0sDXj9CmuY/+/hczJMpzn85ZtpWZ41sQc4VzpxU/Jc96RUMWDWxHjhMcUbWUJQL3yRarm6754EvTx5qeqlHSCc=',
+					},
+					{ no: 56, name: 'BBIM', s: 'izc6c5Ei/T6ZEDPW/0E3Yw==', v: '3LoOhlPsndv4TN1c', c: 'FjtBuIxbOnyBwPmQJU+kDqJFhI0ifn1p6sdzkIVinohsbYmoUP+6' },
+					{
+						no: 57,
+						name: 'kagi',
+						s: 'o/zO7bqVYJfiSiiRQuUu0A==',
+						v: 'aQIqR79bR+hx188P',
+						c: '6q1BU719FwQDL0DtTaFsoTk8yGxrsMlXJtS94zGac1Qw/yfp573p5g/dr6X+oaeG+MSQIY8rFtFrcGvzx3OdI8Ye30jTdOyqLJHDrHMxomStdC+Rth+oA+yTI3WB',
+					},
+					{ no: 58, name: 'maru', s: 'H9YjnD+it9840dU7v+L0qQ==', v: 'h0MgmOVdG8lnIXZx', c: 'VC4JemQNnWiiUGdxSCmU2QsGjVOJa5+p0qz2SprzGQbEvY+E8YAPip9jrnzWszBuHYTIHqqVxA==' },
+					{
+						no: 59,
+						name: '\ud83d\udca5',
+						s: 't4x1JWmtBQ/VNyygg36OXA==',
+						v: 'neulgrJKLeYMtDMw',
+						c: 'KzG28KX7bWz5ahynke+n8VlBkbigWQRE+DOnB/g+Ki98Vhj2Ilxl/7I00UQffI/OBMmzQZGOhyAItaXLYl7ga1hOztsMOKg9IjHmIGaKG1wv5BMW+h/1zICHUjcvd9DnOKE=',
+					},
+					{
+						no: 60,
+						name: '\ud83e\udef0\ud83c\udffb',
+						s: 'b3q/CpdbZHVpQ9ZffQnfyA==',
+						v: '06AqgxhN941Xnmn2',
+						c: 'I8iaXQHIVl8CDYrxiMfjhr/XaHCVE0mk6zeJCLpX07pfWo5MhY0nxs4hDqNAhjHUgkVMGFrqlGllwK1uXqQ9lN2UdI5ym8cZ',
+					},
+				],
+				pool: [
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\ud06c\ub9ac\uc2a4\ub9c8\uc2a4 \uc0c8\ud574 \uc774\ubca4\ud2b8'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc6b0\ub2f9\ud0d5\ud0d5 \uc54c\ucf69\ub2ec\ucf69 \uc11c\ud230 \uccab\uc5f0\uc560'],
+					['\uc778\uc678\ubb3c', '\ubc40\ud30c\uc774\uc5b4\uc640 \ubd88\uba78\uc790'],
+					['\uc13c\ud2f0\ub12c\ubc84\uc2a4', '\uc9dd\uc0ac\ub791'],
+					['\ud574\ub9ac\ud3ec\ud130AU', '\ud589\ubcf5\ud588\ub358 \ud55c\ub54c\ub97c \uc9c0\uc6b0\ub294 \uc624\ube14\ub9ac\ube44\uc544\ud14c'],
+					['\uc0ac\uc774\ubc84 \ud391\ud06c', '\uc0ac\uc774\ubcf4\uadf8\uc640 \uc778\uac04\uc758 \uc0ac\ub791'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc5b4\ub290 \uc5ec\ub984 \ub0a0\uc5d0 \uc77c\uc5b4\ub09c \uc0ac\uace0 (aka. \uccad\uac8c)'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc5f0\uc801\uc73c\ub85c \uc2dc\uc791\ud574\uc11c \uc11c\ub85c \ub208 \ub9de\uc74c'],
+					['\uc54c\uc624\ubb3c', '\ubca0\ud0c0\uc54c\ud30c'],
+					['\uace0\uc804\ubb3c', '\uc815\ub7b5\uacb0\ud63c'],
+					['\uc2a4\ud3ec\uce20\ubb3c', '\ud610\uad00'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\ucea0\uac8c \ube44\ubc00\uc5f0\uc560'],
+					['\uc5f0\uc608\uacc4\ubb3c', '\uc6d0\ub098\uc787'],
+					['\ub85c\ub9e8\uc2a4 \ucf54\ubbf8\ub514', '\uc18c\uafc9\uce5c\uad6c \uccad\uac8c'],
+					['\uc13c\ud2f0\ub12c\uc13c\ud2f0\ub12c', '\ub77c\uc774\ubc8c\uc778\ub370 \uc9dd\uc0ac\ub791\ud568'],
+					['\uc880\ube44 \uc544\ud3ec\uce7c\ub9bd\uc2a4', '\uad70\uc778\uacfc \uac10\uc5fc\uc790'],
+					['\ub290\uc640\ub974', '\uc0ac\ubcc4'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc804 \uc560\uc778\uc758 \uacb0\ud63c\uc2dd'],
+					['\ud604\ub300\ubb3c', '\uc804\uc138\uc0ac\uae30 \ub3d9\uac70'],
+					['\ud604\ub300\ubb3c', '\ub178\ub780\uc7a5\ud310'],
+					['\ub85c\ub9e8\ud2f1\ucf54\ubbf8\ub514', '\uc624\ud53c\uc2a4\ubb3c \uc0ac\ub0b4\uc5f0\uc560 / \ud300\uc7a5\uacfc \ud300\uc7a5'],
+					['\uac00\uc13c\ubb3c', '\uc5ed\ud0a4\uc7a1'],
+					['\ub290\uc640\ub974', '\uc6d0\uc218\ub97c \uc0ac\ub791\ud574\ubc84\ub838\ub2e4'],
+					['\ub3d9\uc591\ud48d', '\uc591\ubc18\uacfc \uae30\uc0dd'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc678\uacc4\uc778'],
+					['\ub290\uc640\ub974', '\uc545\ub9c8 \ub3c4\ub828\ub2d8\uacfc \uacc4\uc57d\ud558\ub824\ub294 \uadf8\uc758 \uc9d1\uc0ac'],
+					['\ub85c\ub9e8\uc2a4 \ucf54\ubbf8\ub514', '\ucd5c \ub300\ud45c\uc758 \uc740\ubc00\ud55c \ucde8\ubbf8\uc0dd\ud65c'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc5ec\uc7a5\uacf5'],
+					['\ub85c\ub9e8\ud2f1\ucf54\ubbf8\ub514', '\uc5b4\uc7a5\uad00\ub9ac'],
+					['\uccad\ucd98', '\uccab \uc0ac\ub791\uc5d0 \ube60\uc9c0\ub294 \uc21c\uac04'],
+					['\ub85c\ub9e8\uc2a4\ud310\ud0c0\uc9c0', '\ud68c\uadc0'],
+					['\ub85c\ub9e8\uc2a4 \ud310\ud0c0\uc9c0', '\ud3c9\ud589\uc6b0\uc8fc'],
+					['\uc624\ud53c\uc2a4', '\uc785\uc0ac \ub3d9\uae30\uc5d0\uc11c \ud300\uc7a5-\ud300\uc6d0\uc73c\ub85c'],
+					['\ub290\uc640\ub974', '\ub9c8\ud53c\uc544x\uc7a0\uc785\uc218\uc0ac\uad00'],
+					['\ubc30\ud2c0\uc5f0\uc560', '\uc218\uc778x\uc218\uc778'],
+					['\ud310\ud0c0\uc9c0', '\uc545\ub9c8\uc640 \uc778\uac04'],
+					['\ud310\ud0c0', '\uc218\uc778&\uc778\uac04\uc73c\ub85c \uc9dd\uc0ac\ub791\uc758 \ucd5c\ud6c4'],
+					['\ud310\ud0c0\uc9c0', '\uaf43(\ud53c\uc2a4\ud2f8\ubc84\uc2a4)'],
+					['\ub9ac\uc5bc\ubb3c', '\ube44\uc988\ub2c8\uc2a4\uac8c\uc774\ud37c\ud3ec\uba3c\uc2a4'],
+					['\ub9ac\uc5bc\ubb3c', '\uba64\ubc84\ub791 \ud574\ubc84\ub838\ub2e4'],
+					['\uad70\ubd80\ubb3c', '\uc815\ubcd1\uc7a5\ub2d8\uacfc \ud3d0\uae09 \ucd5c\uc77c\ubcd1'],
+					['\ud1f4\ub9c8\ubb3c', '\uacbd\ub825\uc790*\uc2e0\uc785'],
+					['\ud310\ud0c0\uc9c0', '\uc0ac\uc774\ubc84\ud391\ud06c'],
+					['\uc2a4\ub9b4\ub7ec', '\ub098\ud3f4\ub9ac\ud0c4\uad34\ub2f4'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc870\ud3edx\uce74\ud398\uc0ac\uc7a5'],
+					['\ubc84\ub514\ubb3c', '\uc0ac\ub9dd \ud6c4 \ud68c\uadc0'],
+					['\ub3d9\uc591\ud488', '\ubb34\ud611'],
+					['\ub9ac\uc5bc\ubb3c', '\uac00\uc2b4'],
+					['\ub290\uc640\ub974', '\ub178\ub791\uc7a5\ud310 / \uc30d\ubc29\uad6c\uc6d0'],
+					['\uc778\uc678\ubb3c', '\uc2e0\uacfc \uc0ac\uc81c(\uc2e0\uc774 \uc0ac\uc81c\uac00 \ub9d8\uc5d0 \ub4e4\uc5b4\uc11c \ub0b4\ub824\uc634)'],
+					['SF', '\uc21c\uc560'],
+					['\uc624\ud53c\uc2a4 \ub85c\ub9e8\uc2a4', '\uc9c1\uc7a5\ub3d9\ub8cc\uc640\uc758 \uc721\uc544'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uae30 \uc388 \ubb34\ub2f9\uacfc \uadc0\uc2e0 \ubd99\uc740 \uc18c\ub144'],
+					['\ud604\ub300\ubb3c', '\uad8c\ud0dc\uae30'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc7ac\ubc8c \uacc4\uc57d\uc5f0\uc560'],
+					['SF', '\uc6b0\uc8fc'],
+					['\ub85c\ub9e8\ud2f1 \ucf54\ubbf8\ub514', '\uc6b0\ub2f9\ud0d5\ud0d5 \ub8f8\uc250\uc5b4'],
+					['\uad70\ubd80\ubb3c', '\uc131\uacf5\ud55c \ud601\uba85 \ub9dd\ud55c \uc0ac\ub791'],
+					['SF', '\ubba4\uc988'],
+					['\ub178\uc7a5', '\ub2e4\uc815\uacf5 \uc790\ub0ae\uc218 \uad6c\uc6d0\uc11c\uc0ac'],
+				],
+			};
+			const $ = s => document.querySelector(s);
+			const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+			const sel = $('#sel-no'),
+				codeIn = $('#in-code'),
+				msg = $('#msg'),
+				strip = $('#strip'),
+				win = $('#window');
+			let busy = false,
+				lastText = '';
+
+			DATA.entries.forEach(e => {
+				const o = document.createElement('option');
+				o.value = e.no;
+				o.textContent = `${String(e.no).padStart(2, '0')} · ${e.name}`;
+				sel.appendChild(o);
+			});
+
+			const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+			const symHTML = (g, k) => `<div class="sym"><span class="g">${esc(g)}</span><span class="k">${esc(k)}</span></div>`;
+			const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+			const rand = n => {
+				const a = new Uint32Array(1);
+				crypto.getRandomValues(a);
+				return a[0] % n;
+			};
+
+			async function decrypt(entry, code) {
+				const enc = new TextEncoder();
+				const base = await crypto.subtle.importKey('raw', enc.encode(code), 'PBKDF2', false, ['deriveKey']);
+				const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: unb64(entry.s), iterations: DATA.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+				const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(entry.v) }, key, unb64(entry.c));
+				return JSON.parse(new TextDecoder().decode(pt));
+			}
+
+			let audioCtx = null;
+			function tick(freq, dur) {
+				try {
+					audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+					const o = audioCtx.createOscillator(),
+						g = audioCtx.createGain();
+					o.type = 'triangle';
+					o.frequency.value = freq;
+					g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+					g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+					o.connect(g).connect(audioCtx.destination);
+					o.start();
+					o.stop(audioCtx.currentTime + dur);
+				} catch (_) {}
+			}
+
+			function spinTo(res) {
+				return new Promise(resolve => {
+					win.classList.remove('win');
+					const finalHTML = symHTML(res.g, res.k);
+					if (reduceMotion) {
+						strip.style.transform = 'none';
+						strip.innerHTML = finalHTML;
+						resolve();
+						return;
+					}
+					const items = Array.from({ length: 40 }, () => {
+						const p = DATA.pool[rand(DATA.pool.length)];
+						return symHTML(p[0], p[1]);
+					});
+					strip.innerHTML = items.join('') + finalHTML;
+					const h = win.clientHeight;
+					strip.style.transition = 'none';
+					strip.style.transform = 'translateY(0)';
+					void strip.offsetHeight;
+					strip.style.transition = 'transform 4200ms cubic-bezier(.1,.62,.14,1)';
+					strip.style.transform = `translateY(${-items.length * h}px)`;
+					let ticks = 0;
+					const iv = setInterval(() => {
+						if (++ticks > 18) {
+							clearInterval(iv);
+							return;
+						}
+						tick(500 + ticks * 20, 0.03);
+					}, 140);
+					strip.addEventListener('transitionend', function done() {
+						strip.removeEventListener('transitionend', done);
+						clearInterval(iv);
+						strip.style.transition = 'none';
+						strip.style.transform = 'none';
+						strip.innerHTML = finalHTML;
+						resolve();
+					});
+				});
+			}
+
+			$('#ticket').addEventListener('submit', async ev => {
+				ev.preventDefault();
+				if (busy) return;
+				const entry = DATA.entries.find(e => String(e.no) === sel.value);
+				const code = codeIn.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+				if (!entry) {
+					msg.className = 'msg err';
+					msg.textContent = '참가 번호를 먼저 골라 주세요.';
+					return;
+				}
+				if (code.length !== 8) {
+					msg.className = 'msg err';
+					msg.textContent = '코드는 8자리예요. 받은 코드를 다시 확인해 주세요.';
+					return;
+				}
+				busy = true;
+				$('#btn-spin').disabled = true;
+				msg.className = 'msg';
+				msg.textContent = '코드 확인 중…';
+				let res;
+				try {
+					res = await decrypt(entry, code);
+				} catch (_) {
+					msg.className = 'msg err';
+					msg.textContent = '번호와 코드가 맞지 않아요. 내 번호를 골랐는지, 코드에 오타가 없는지 확인해 주세요.';
+					busy = false;
+					$('#btn-spin').disabled = false;
+					return;
+				}
+				msg.textContent = '레버를 당겼어요!';
+				$('#result').hidden = true;
+				tick(220, 0.25);
+				await spinTo(res);
+				win.classList.add('win');
+				tick(988, 0.18);
+				setTimeout(() => tick(1318, 0.3), 160);
+				msg.className = 'msg';
+				msg.textContent = `${entry.name} 님의 키워드가 나왔어요.`;
+				lastText = `[${res.g}] ${res.k}`;
+				$('#result-text').innerHTML = `<b>${esc(res.g)}</b> · ${esc(res.k)}`;
+				$('#result').hidden = false;
+				busy = false;
+				$('#btn-spin').disabled = false;
+				$('#btn-spin').textContent = '다시 SPIN ▸';
+			});
+
+			$('#btn-copy').addEventListener('click', e => {
+				const btn = e.currentTarget;
+				navigator.clipboard
+					?.writeText(lastText)
+					.then(() => {
+						btn.textContent = '복사했어요';
+					})
+					.catch(() => {
+						const r = document.createRange();
+						r.selectNodeContents($('#result-text'));
+						const s = getSelection();
+						s.removeAllRanges();
+						s.addRange(r);
+						btn.textContent = '선택됨, 복사해 주세요';
+					});
+			});
+		</script>
+	</body>
+</html>
